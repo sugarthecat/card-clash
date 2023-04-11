@@ -1,0 +1,27 @@
+html{
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: gray;
+}
+header{
+    text-align: center;
+}
+button{
+    background-color: #32a0a8;
+    padding: 15px;
+    border:none;
+    text-align:center;
+    text-decoration:none;
+    transition: 200ms;
+}
+button:hover{
+    background-color: #98d9e3;
+}
+header a {
+    text-decoration: none;
+}
+body{
+    width: 1000px;
+    padding: 50px;
+    margin:auto;
+    background-color:white;
+}
