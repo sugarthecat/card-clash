@@ -25,3 +25,7 @@ body{
     margin:auto;
     background-color:white;
 }
+div.errortext{
+    color: red;
+    font-weight: bolder;
+}
