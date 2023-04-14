@@ -3,13 +3,14 @@
 <head>
     <title>Card Clash!</title>
     <script src="script.js"></script>
-    <link rel="stylesheet" type='text/css' href = "../style.css"/>
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+    <link rel="stylesheet" type='text/css' href="../style.css" />
 </head>
 
 <body>
     <header>
         <h1>Card Clash!</h1>
-        <hr/>
+        <hr />
         <a href="../">
             <button>
                 Home
@@ -26,16 +27,20 @@
             </button>
         </a>
     </header>
-    <h2>
-        Login
-    </h2>
-    <div>
-        <span>Username:</span><input id = "un" type="text"/> 
-        <br/>
-        <br/>
-        <span>Password:</span><input id = "pw" type="password"/>
-        <br/>
-        <br/>
-        <button>Login</button>
+    <div id="content">
+        <h2>
+            Login
+        </h2>
+        <div>
+            <span>Username:</span><input id="un" type="text" />
+            <br />
+            <br />
+            <span>Password:</span><input id="pw" type="password" />
+            <br />
+            <br />
+            <button onclick="login()">Login</button>
+            <br />
+            <div class="errortext" id="errortext"></div>
+        </div>
     </div>
 </body>

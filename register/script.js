@@ -21,6 +21,11 @@ async function register() {
     } else {
         document.getElementById("errortext").innerHTML = ""
     }
-    let response = await fetch("register.py?un=" + un + "&pw=" + pw).then(x => x.text());
-    console.log(response)
+    let response = await fetch("register.php?un=" + un + "&pw=" + pw).then(x => x.json());
+    if(response.error){
+        
+        document.getElementById("errortext").innerHTML = response.error
+    }else{
+        window.location.href = "../"
+    }
 }
