@@ -18,13 +18,13 @@ if ($username != preg_replace("/[^a-zA-Z0-9]+/", "", $username)) {
 if ($password != preg_replace("/[^a-zA-Z0-9]+/", "", $password)) {
     die("{\"error\": \"password must consist only of letters and numbers\"}");
 }
-$sql = "SELECT * FROM users WHERE LOWER(username) = LOWER(\"".$username."\")";
+$sql = "SELECT * FROM user WHERE LOWER(username) = LOWER(\"".$username."\")";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
     // output data of each row
     die("{\"success\": true}");
 } else {
-    $sql = "INSERT INTO users (username, `password`)
+    $sql = "INSERT INTO user (username, `password`)
     VALUES ('" . $username . "','" . $password . "')";
     if ($conn->query($sql) === TRUE) {
         echo "{\"success\": true}";

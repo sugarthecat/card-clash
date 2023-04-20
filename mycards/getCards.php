@@ -18,12 +18,19 @@ if ($username != preg_replace("/[^a-zA-Z0-9]+/", "", $username)) {
 if ($password != preg_replace("/[^a-zA-Z0-9]+/", "", $password)) {
     die("{\"error\": \"password must consist only of letters and numbers\"}");
 }
-$sql = "SELECT * FROM user WHERE LOWER(username) = LOWER(\"" . $username . "\") AND password = ". $password;
+$sql = "SELECT deck_name, deck_icon FROM deck INNER JOIN deck_ownership ON deck.deck_id = deck_ownership.deck_id INNER JOIN user on deck_ownership.user_id = user.user_id WHERE LOWER(username) = LOWER(\"" . $username . "\") AND password = \"" . $password . "\"";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
-    die("{\"success\": true, \"username\": \"" . $username . "\"}");
+    $cards = "";
+    if ($row = $result->fetch_assoc()) {
+        $cards = "{\"name\":\"" . $row["deck_name"] . "\", \"icon\":\"" . $row["deck_icon"] . "\"}";
+    }
+    while ($row = $result->fetch_assoc()) {
+        $cards = ",{\"name\":\"" . $row["deck_name"] . "\", \"icon\":\"" . $row["deck_icon"] . "\"}";
+    }
+    die("{\"success\": true, \"decks\": [" . $cards . "]}");
     // output data of each row
 } else {
-    die("{\"error\": \"Invalid login\"}");
+    die("{\"error\": \"You need to sign in to access this page\"}");
 }
 ?>
