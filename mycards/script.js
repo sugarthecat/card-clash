@@ -25,9 +25,11 @@ async function attemptGetCards() {
         return;
     }
     if (!response.error) {
+
         let decks = response.decks;
+        console.log(decks)
         for(let i = 0; i<decks.length; i++){
-            let strip = getNewStrip(decks[i].name, decks[i].icon);
+            let strip = getNewStrip(decks[i].name, decks[i].icon, decks[i].id);
             document.getElementById("content").appendChild(strip);
         }
     } else {
@@ -39,13 +41,15 @@ async function attemptGetCards() {
 }
 attemptGetCards();
 
-function getNewStrip(name, src){
+function getNewStrip(name, src, id){
     let div = document.createElement("div");
     div.innerHTML = name;
     div.className = "deck-stub"
     let img = document.createElement("img")
     img.src = "../assets/"+src
-    console.log(src)
-    div.appendChild(img)
+    let a = document.createElement('a')
+    a.href = "../cardpack?id="+id
+    a.appendChild(img)
+    div.appendChild(a)
     return div
 }
