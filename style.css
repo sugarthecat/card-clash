@@ -5,6 +5,10 @@ html{
 header{
     text-align: center;
 }
+canvas{
+    
+    user-select: none;
+}
 button{
     background-color: #32a0a8;
     padding: 15px;

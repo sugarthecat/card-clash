@@ -15,12 +15,6 @@ async function register() {
     if (pw != pw2) {
         document.getElementById("errortext").innerHTML = "Passwords don't match"
         return;
-    } else if (pw.length < 4) {
-        document.getElementById("errortext").innerHTML = "Password must be at least 4 characters"
-        return;
-    } else if (document.getElementById("un").value.length < 5) {
-        document.getElementById("errortext").innerHTML = "Username must be at least 5 characters"
-        return;
     } else if ( (!isAlphanumeric(un + pw))) {
         document.getElementById("errortext").innerHTML = "Username and password must be only letters and numbers"
         return;

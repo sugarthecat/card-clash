@@ -18,6 +18,13 @@ if ($username != preg_replace("/[^a-zA-Z0-9]+/", "", $username)) {
 if ($password != preg_replace("/[^a-zA-Z0-9]+/", "", $password)) {
     die("{\"error\": \"password must consist only of letters and numbers\"}");
 }
+if(strlen($username) > 30 || strlen(($username) < 3)){
+    die("{\"error\": \"Username must be between 3 and 30 letters\"}");
+
+}
+if(strlen($password) > 30 || strlen(($password) < 3)){
+    die("{\"error\": \"Password must be between 3 and 30 letters\"}");
+}
 $sql = "SELECT * FROM user WHERE LOWER(username) = LOWER(\"".$username."\")";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {

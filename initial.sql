@@ -5,6 +5,7 @@ CREATE TABLE `user`(
     user_id int AUTO_INCREMENT UNIQUE,
     username varchar(30) UNIQUE,
     `password` varchar(30),
+    selected_deck int DEFAULT 1,
     PRIMARY KEY(user_id)
 );
 CREATE TABLE deck_ownership(
@@ -28,7 +29,7 @@ CREATE TABLE deck_card(
     damage int,
     card_sprite varchar(45),
     card_name varchar(25),
-    PRIMARY KEY(card_id, deck_id)
+    PRIMARY KEY(card_id)
 );
 INSERT INTO deck_card (deck_id, card_id, health, damage, card_sprite, card_name)
 VALUES 
@@ -43,13 +44,19 @@ VALUES
 (1,9,0,5,"soldier.png", "Soldier"),
 (1,10,0,0,"mobilization.png", "Mobilization");
 CREATE TRIGGER `giveDefaultCard` AFTER INSERT ON `user` FOR EACH ROW INSERT INTO cardclash.deck_ownership( user_id, deck_id ) VALUES (new.user_id, 1);
+
+
 CREATE TABLE game_player(
     user_id int,
     last_server_contact DATETIME,
-    health int
+    health int DEFAULT 20,
+    last_turn DATETIME,
+    last_turn_int int DEFAULT 1,
+    PRIMARY KEY(user_id)
 );
 CREATE TABLE game_card(
     user_id int,
     card_id int, 
-    played TINYINT(1)
+    play_status int DEFAULT 1,
+    FOREIGN KEY (user_id) REFERENCES game_player(user_id) ON DELETE CASCADE
 );
