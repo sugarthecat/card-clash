@@ -17,6 +17,7 @@ $result = $conn->query($sql);
 
 $username = $_GET["un"];
 $password = $_GET["pw"];
+
 if ($username != preg_replace("/[^a-zA-Z0-9]+/", "", $username)) {
     die("{\"error\": \"Username must consist only of letters and numbers\"}");
 }

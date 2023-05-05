@@ -45,6 +45,7 @@ if ($signedIn) {
         $conn->query($sql);
         $sql = "INSERT INTO game_card (card_id, user_id) SELECT card_id, user_id FROM deck_card INNER JOIN deck ON deck_card.deck_id = deck.deck_id INNER JOIN user on user.selected_deck = deck.deck_id WHERE username = \"" . $username . "\"";
         $conn->query($sql);
+        
     } else {
         // already in lobby
         $sql = "UPDATE game_player INNER JOIN user ON user.user_id = game_player.user_id SET last_server_contact = now() WHERE username = \"" . $username . "\"";
@@ -52,13 +53,13 @@ if ($signedIn) {
     }
 
     $out = $out . "\"cards\": [";
-    $sql = "SELECT card_name, card_sprite FROM game_card INNER JOIN deck_card ON game_card.card_id = deck_card.card_id INNER JOIN user on user.user_id = game_card.user_id WHERE username = \"" . $username . "\"";
+    $sql = "SELECT card_name, card_sprite, health, damage FROM game_card INNER JOIN deck_card ON game_card.card_id = deck_card.card_id INNER JOIN user on user.user_id = game_card.user_id WHERE username = \"" . $username . "\" AND play_status = 1";
     $result = $conn->query($sql);
     if ($row = $result->fetch_assoc()) {
-        $out = $out . "{\"name\":\"" . $row["card_name"] . "\", \"icon\": \"" . $row["card_sprite"] . "\"}";
+        $out = $out . "{\"name\":\"" . $row["card_name"] . "\", \"icon\": \"" . $row["card_sprite"] . "\", \"health\": \"" . $row["health"] . "\", \"damage\": \"" . $row["damage"] . "\"}";
     }
     while ($row = $result->fetch_assoc()) {
-        $out = $out . ",{\"name\":\"" . $row["card_name"] . "\", \"icon\": \"" . $row["card_sprite"] . "\"}";
+        $out = $out . ",{\"name\":\"" . $row["card_name"] . "\", \"icon\": \"" . $row["card_sprite"] . "\", \"health\": \"" . $row["health"] . "\", \"damage\": \"" . $row["damage"] . "\"}";
     }
     $out = $out . "],";
 }

@@ -13,21 +13,24 @@ function getCookie(cname) {
     }
     return "";
 }
-function preload(){
-
-}
-
+let assets = {}
 function setup() {
     let canvas = createCanvas(600, 600)
     canvas.parent("content")
 }
-function mouseClicked(){
-    if(players.length > 0 && username == players[0].name){
-        let j = fetch("takeTurn.php?un="+username+"&pw="+password).then(x => x.text()).then(x => console.log(x))
+function mouseClicked() {
+    if (players.length > 0 && username == players[0].name) {
+        let j = fetch("takeTurn.php?un=" + username + "&pw=" + password).then(x => x.text()).then(x => console.log(x))
     }
 }
+function loadItem(iconIndex) {
+    loadedbool[iconIndex] = true;
+}
+function isMyTurn(){
+    return players.length > 0 && username == players[0].name
+}
 function draw() {
-    if(frameCount % 10 == 0){
+    if (frameCount % 10 == 0) {
         updateGame();
     }
     background(80)
@@ -41,15 +44,39 @@ function draw() {
         text("Not Signed in", 300, 525)
     }
     textAlign(LEFT)
-    textSize(30)
-    for(let i = 0; i<players.length; i++){
-        text(players[i].name + " ("+ players[i].health +" hp)", 15,i*40+150)
+    textSize(25)
+    for (let i = 0; i < players.length; i++) {
+        text(players[i].name + " (" + players[i].health + " hp)", 30, i * 35 + 150)
     }
-    if(players.length > 0 && username == players[0].name){
-        rect (300,300,100,100)
+    if ( isMyTurn()) {
+        rect(300, 300, 100, 100)
+    }
+    for (let i = 0; i < cards.length; i++) {
+        if (assets[cards[i].icon] === undefined) {
+            console.log("Loading "+ cards[i].icon)
+            loadedbool[cards[i].icon] = false;
+            assets[cards[i].icon] = loadImage("assets/" + cards[i].icon, function () { loadItem(cards[i].icon) })
+        }
+        if (loadedbool[cards[i].icon]) {
+            fill(255)
+            rect((i%5)*100+60,500-floor(i/5)*100,80,80)
+            image(assets[cards[i].icon],(i%5)*100+60,500-floor(i/5)*100,80,80)
+        } 
+        if(mouseX > (i%5)*100+60 && mouseY > 400+floor(i/5)*100 && mouseX <(i%5)*100+140 && mouseY < 480+floor(i/5)*100  ){
+            fill(255)
+            rect(380,120,200,100)
+            fill(0)
+            textAlign(CENTER)
+            text(cards[i].name,480,150)
+            text(cards[i].damage + " Dmg",480,180)
+            text(cards[i].health + " Hp",480,210)
+        }
     }
 }
+let loaded = {};
+let loadedbool = {};
 let players = [];
+let cards = [];
 let username = getCookie("un");
 let password = getCookie("pw");
 try {
@@ -60,18 +87,21 @@ try {
 }
 async function updateGame() {
     let response = await fetch("getGameUpdate.php?un=" + username + "&pw=" + password).then(x => x.text())
-    try{
+    try {
         response = JSON.parse(response)
-    }catch{
+    } catch {
         console.error(response)
         return;
     }
-    if(response.error){
+    if (response.error) {
         console.error(response.error)
-    }else{
-        if(response.players){
+    } else {
+        if (response.players) {
             players = response.players
-            console.log(response.cards)
+        }
+        if (response.cards) {
+            cards = response.cards;
+            //console.log(JSON.stringify(response))
         }
         //console.log(response)
     }
