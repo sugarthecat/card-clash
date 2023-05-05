@@ -53,25 +53,25 @@ if ($signedIn) {
     }
 
     $out = $out . "\"cards\": [";
-    $sql = "SELECT card_name, card_sprite, health, damage FROM game_card INNER JOIN deck_card ON game_card.card_id = deck_card.card_id INNER JOIN user on user.user_id = game_card.user_id WHERE username = \"" . $username . "\" AND play_status = 1";
+    $sql = "SELECT card_name, card_sprite, health, damage, game_card.card_id as \"id\" FROM game_card INNER JOIN deck_card ON game_card.card_id = deck_card.card_id INNER JOIN user on user.user_id = game_card.user_id WHERE username = \"" . $username . "\" AND play_status = 1";
     $result = $conn->query($sql);
     if ($row = $result->fetch_assoc()) {
-        $out = $out . "{\"name\":\"" . $row["card_name"] . "\", \"icon\": \"" . $row["card_sprite"] . "\", \"health\": \"" . $row["health"] . "\", \"damage\": \"" . $row["damage"] . "\"}";
+        $out = $out . "{\"name\":\"" . $row["card_name"] . "\", \"icon\": \"" . $row["card_sprite"] . "\", \"health\": \"" . $row["health"] . "\", \"damage\": \"" . $row["damage"] . "\", \"id\": \"" . $row["id"] . "\"}";
     }
     while ($row = $result->fetch_assoc()) {
-        $out = $out . ",{\"name\":\"" . $row["card_name"] . "\", \"icon\": \"" . $row["card_sprite"] . "\", \"health\": \"" . $row["health"] . "\", \"damage\": \"" . $row["damage"] . "\"}";
+        $out = $out . ",{\"name\":\"" . $row["card_name"] . "\", \"icon\": \"" . $row["card_sprite"] . "\", \"health\": \"" . $row["health"] . "\", \"damage\": \"" . $row["damage"] . "\", \"id\": \"" . $row["id"] . "\"}";
     }
     $out = $out . "],";
 }
-$sql = "SELECT username, health FROM user INNER JOIN game_player ON game_player.user_id = user.user_id ORDER BY last_turn asc";
+$sql = "SELECT username, health, user.user_id as \"id\" FROM user INNER JOIN game_player ON game_player.user_id = user.user_id ORDER BY last_turn asc";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
     $out = $out . "\"players\": [";
     if ($row = $result->fetch_assoc()) {
-        $out = $out . "{\"name\":\"" . $row["username"] . "\", \"health\": \"" . $row["health"] . "\"}";
+        $out = $out . "{\"name\":\"" . $row["username"] . "\", \"health\": \"" . $row["health"] . "\", \"id\": \"" . $row["id"] . "\"}";
     }
     while ($row = $result->fetch_assoc()) {
-        $out = $out . ",{\"name\":\"" . $row["username"] . "\", \"health\": \"" . $row["health"] . "\"}";
+        $out = $out . ",{\"name\":\"" . $row["username"] . "\", \"health\": \"" . $row["health"] . "\", \"id\": \"" . $row["id"] . "\"}";
     }
     $out = $out . "]";
     // output data of each row
