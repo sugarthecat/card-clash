@@ -11,7 +11,7 @@ if ($conn->connect_error) {
     die("{\"error\": \"Connection failed: " . $conn->connect_error . "\"}");
 }
 
-$sql = "DELETE FROM game_player WHERE last_server_contact < DATE_SUB(NOW(), INTERVAL '45' SECOND)";
+$sql = "DELETE FROM game_player WHERE last_server_contact < DATE_SUB(NOW(), INTERVAL '45' SECOND) OR health < 1";
 $result = $conn->query($sql);
 
 
@@ -35,9 +35,11 @@ if ($signedIn) {
     $result = $conn->query($sql);
     if ($result->num_rows == 0) {
         //not in lobby
+        //insert player
         $sql = "SELECT * FROM game_player";
         $result = $conn->query($sql);
         if ($result->num_rows == 0) {
+            
             $sql = "INSERT INTO game_player ( user_id, last_turn, last_server_contact, last_turn_int) SELECT user_id, now(), now(), 1 FROM user WHERE username = \"" . $username . "\" LIMIT 1";
         } else {
             $sql = "INSERT INTO game_player ( user_id, last_turn, last_server_contact, last_turn_int) SELECT user_id, now(), now(), 1 + (SELECT last_turn_int FROM game_player ORDER BY last_turn_int desc LIMIT 1) FROM user WHERE username = \"" . $username . "\" LIMIT 1";
@@ -54,7 +56,8 @@ if ($signedIn) {
         $sql = "UPDATE game_player INNER JOIN user ON user.user_id = game_player.user_id SET last_server_contact = now() WHERE username = \"" . $username . "\"";
         $conn->query($sql);
     }
-
+}
+if($signedIn){
     $out = $out . "\"cards\": [";
     $sql = "SELECT card_name, card_sprite, health, damage, game_card.card_id as \"id\" FROM game_card INNER JOIN deck_card ON game_card.card_id = deck_card.card_id INNER JOIN user on user.user_id = game_card.user_id WHERE username = \"" . $username . "\" AND play_status = 1";
     $result = $conn->query($sql);

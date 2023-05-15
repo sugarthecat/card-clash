@@ -102,18 +102,25 @@ if ($validAttack) {
     }
     $sql = "UPDATE game_player SET health = " . ($prevHealth - $damage) . " WHERE user_id = " . $target;
     $result = $conn->query($sql);
-    // Draw new card
-    $sql = "SELECT * FROM game_card INNER JOIN user ON user.user_id = game_card.user_id WHERE play_status = 0 AND username = \"".$username."\"";
-    $result = $conn->query($sql);
-    if ($result->num_rows == 0) {
-        $sql = "SELECT * FROM game_card INNER JOIN user ON user.user_id = game_card.user_id WHERE play_status = 1 AND username = \"".$username."\"";
-        $result = $conn->query($sql);
-        if ($result->num_rows <= 3) {
-            $sql = "SELECT * FROM game_card INNER JOIN user ON user.user_id = game_card.user_id WHERE play_status = 1 AND username = \"".$username."\"";
-        }
-    }
-
 }
+
+// reshuffle old cards
+$sql = "SELECT * FROM game_card INNER JOIN user ON user.user_id = game_card.user_id WHERE play_status = 0 AND username = \"" . $username . "\"";
+$result = $conn->query($sql);
+if ($result->num_rows == 0) {
+    $sql = "SELECT * FROM game_card INNER JOIN user ON user.user_id = game_card.user_id WHERE play_status = 1 AND username = \"" . $username . "\"";
+    $result = $conn->query($sql);
+    if ($result->num_rows <= 3) {
+        $sql = "UPDATE game_card SET play_status = 0 WHERE play_status = 2 AND (SELECT user_id FROM user WHERE username = \"".$username."\") = user_id";
+        $conn->query($sql);
+    }
+}
+//draw new cards
+
+$sql = "UPDATE game_card SET play_status = 1 WHERE play_status = 0 AND (SELECT user_id FROM user WHERE username = \"".$username."\") = user_id ORDER BY RAND () LIMIT 1";
+$conn->query($sql);
+
+
 $sql = "UPDATE game_player INNER JOIN user ON user.user_id = game_player.user_id SET last_turn = now() WHERE username = \"" . $username . "\"";
 $conn->query($sql);
 $sql = "UPDATE game_player INNER JOIN user ON user.user_id = game_player.user_id SET last_turn_int = 1+(SELECT last_turn_int FROM game_player ORDER BY last_turn_int desc LIMIT 1) WHERE username = \"" . $username . "\"";
