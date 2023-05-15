@@ -46,6 +46,9 @@ if ($signedIn) {
         $sql = "INSERT INTO game_card (card_id, user_id) SELECT card_id, user_id FROM deck_card INNER JOIN deck ON deck_card.deck_id = deck.deck_id INNER JOIN user on user.selected_deck = deck.deck_id WHERE username = \"" . $username . "\"";
         $conn->query($sql);
         
+        $sql = "UPDATE game_card SET play_status = 0 WHERE (SELECT user_id FROM user WHERE username = \"".$username."\") = user_id ORDER BY RAND ()  LIMIT 7";
+        $conn->query($sql);
+        
     } else {
         // already in lobby
         $sql = "UPDATE game_player INNER JOIN user ON user.user_id = game_player.user_id SET last_server_contact = now() WHERE username = \"" . $username . "\"";

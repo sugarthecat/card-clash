@@ -102,6 +102,17 @@ if ($validAttack) {
     }
     $sql = "UPDATE game_player SET health = " . ($prevHealth - $damage) . " WHERE user_id = " . $target;
     $result = $conn->query($sql);
+    // Draw new card
+    $sql = "SELECT * FROM game_card INNER JOIN user ON user.user_id = game_card.user_id WHERE play_status = 0 AND username = \"".$username."\"";
+    $result = $conn->query($sql);
+    if ($result->num_rows == 0) {
+        $sql = "SELECT * FROM game_card INNER JOIN user ON user.user_id = game_card.user_id WHERE play_status = 1 AND username = \"".$username."\"";
+        $result = $conn->query($sql);
+        if ($result->num_rows <= 3) {
+            $sql = "SELECT * FROM game_card INNER JOIN user ON user.user_id = game_card.user_id WHERE play_status = 1 AND username = \"".$username."\"";
+        }
+    }
+
 }
 $sql = "UPDATE game_player INNER JOIN user ON user.user_id = game_player.user_id SET last_turn = now() WHERE username = \"" . $username . "\"";
 $conn->query($sql);

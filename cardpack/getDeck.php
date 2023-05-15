@@ -14,7 +14,7 @@ $id = $_GET["id"];
 if (is_numeric($id) != 1) {
     die("{\"error\": \"ID must consist only of numbers: " .($id) . "\"}");
 }
-$sql = "SELECT card_name, card_sprite FROM deck_card";
+$sql = "SELECT card_name, card_sprite FROM deck_card WHERE deck_id = ".$id;
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
     $cards = "";
