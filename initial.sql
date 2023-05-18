@@ -23,7 +23,8 @@ INSERT INTO deck (deck_name, deck_icon)
 VALUES
 ("Army Deck", "tank.png"),
 ("Navy Deck", "tank.png"),
-("Chess Deck", "knight.png");
+("Chess Deck", "knight.png"),
+("USSR Deck", "mass_assault.png");
 CREATE TABLE deck_card(
     deck_id int,
     card_id int, 
@@ -64,7 +65,17 @@ VALUES
 (3,27,0,4,"bishop.png", "Bishop"),
 (3,28,0,7,"rook.png", "Rook"),
 (3,29,0,10,"queen.png", "Queen"),
-(3,30,0,0,"king.png", "King");
+(3,30,0,0,"king.png", "King"),
+(3,31,1,3,"conscript.png", "Conscript"),
+(3,32,1,3,"conscript.png", "Conscript"),
+(3,33,1,3,"conscript.png", "Conscript"),
+(3,34,1,3,"conscript.png", "Conscript"),
+(3,35,1,3,"conscript.png", "Conscript"),
+(3,36,1,3,"conscript.png", "Conscript"),
+(3,37,1,3,"conscript.png", "Conscript"),
+(3,38,1,3,"conscript.png", "Conscript"),
+(3,39,2,6,"soviet_tank.png", "Tank"),
+(3,40,0,0,"mass_assault.png", "Mass Assault");
 
 
 CREATE TRIGGER `giveDefaultCard` AFTER INSERT ON `user` FOR EACH ROW INSERT INTO cardclash.deck_ownership( user_id, deck_id ) VALUES (new.user_id, 1);
