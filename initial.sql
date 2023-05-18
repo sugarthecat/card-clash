@@ -22,7 +22,8 @@ CREATE TABLE deck(
 INSERT INTO deck (deck_name, deck_icon)
 VALUES
 ("Army Deck", "tank.png"),
-("Navy Deck", "tank.png");
+("Navy Deck", "tank.png"),
+("Chess Deck", "knight.png");
 CREATE TABLE deck_card(
     deck_id int,
     card_id int, 
@@ -45,15 +46,26 @@ VALUES
 (1,9,0,5,"soldier.png", "Soldier"),
 (1,10,0,0,"mobilization.png", "Mobilization"),
 (2,11,0,0,"carrier.png", "Aircraft Carrier"),
-(2,12,0,2,"destroyer.png", "Destroyer"),
-(2,13,0,10,"destroyer.png", "Destroyer"),
-(2,14,3,0,"cruiser.png", "Cruiser"),
-(2,15,3,0,"cruiser.png", "Cruiser"),
-(2,16,4,1,"battleship.png", "Battleship"),
-(2,17,0,5,"submarine.png", "Submarine"),
-(2,18,0,5,"submarine.png", "Submarine"),
-(2,19,0,5,"frigate.png", "Frigate"),
-(2,20,0,0,"frigate.png", "Frigate");
+(2,12,3,0,"destroyer.png", "Destroyer"),
+(2,13,3,0,"destroyer.png", "Destroyer"),
+(2,14,0,6,"cruiser.png", "Cruiser"),
+(2,15,0,6,"cruiser.png", "Cruiser"),
+(2,16,0,10,"battleship.png", "Battleship"),
+(2,17,0,4,"submarine.png", "Submarine"),
+(2,18,0,4,"submarine.png", "Submarine"),
+(2,19,2,0,"frigate.png", "Frigate"),
+(2,20,2,0,"frigate.png", "Frigate"),
+(3,21,2,1,"pawn.png", "Pawn"),
+(3,22,2,1,"pawn.png", "Pawn"),
+(3,23,2,1,"pawn.png", "Pawn"),
+(3,24,2,1,"pawn.png", "Pawn"),
+(3,25,2,1,"pawn.png", "Pawn"),
+(3,26,0,4,"knight.png", "Knight"),
+(3,27,0,4,"bishop.png", "Bishop"),
+(3,28,0,7,"rook.png", "Rook"),
+(3,29,0,10,"queen.png", "Queen"),
+(3,30,0,0,"king.png", "King");
+
 
 CREATE TRIGGER `giveDefaultCard` AFTER INSERT ON `user` FOR EACH ROW INSERT INTO cardclash.deck_ownership( user_id, deck_id ) VALUES (new.user_id, 1);
 CREATE TABLE game_player(
