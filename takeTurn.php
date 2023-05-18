@@ -25,6 +25,14 @@ if ($password != preg_replace("/[^a-zA-Z0-9]+/", "", $password)) {
     die("{\"error\": \"password must consist only of letters and numbers\"}");
 }
 
+$sql = "SELECT is_active FROM game_status";
+$result = $conn->query(($sql));
+if($row = $result->fetch_assoc()){
+    if($row["is_active"] == '0' ){
+        die("{\"error\":\"Invalid turn, game has not started\"}");
+    }
+}
+
 $sql = "SELECT * FROM user INNER JOIN game_player WHERE LOWER(username) = LOWER(\"" . $username . "\") AND password = \"" . $password . "\"";
 $result = $conn->query($sql);
 if ($result->num_rows == 0) {
