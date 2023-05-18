@@ -27,8 +27,8 @@ if ($password != preg_replace("/[^a-zA-Z0-9]+/", "", $password)) {
 
 $sql = "SELECT is_active FROM game_status";
 $result = $conn->query(($sql));
-if($row = $result->fetch_assoc()){
-    if($row["is_active"] == '0' ){
+if ($row = $result->fetch_assoc()) {
+    if ($row["is_active"] == '0') {
         die("{\"error\":\"Invalid turn, game has not started\"}");
     }
 }
@@ -75,13 +75,14 @@ if ($result->num_rows == 0) {
 // get damage and health from card
 $damage = 0;
 $health = 0;
+$cardname = "";
 if ($validAttack) {
-    $sql = "SELECT damage, health FROM game_card INNER JOIN user on user.user_id = game_card.user_id INNER JOIN deck_card ON deck_card.card_id = game_card.card_id WHERE game_card.card_id = " . $cardid . " AND LOWER(username) = LOWER(\"" . $username . "\") AND play_status = 1";
+    $sql = "SELECT damage, health, card_name FROM game_card INNER JOIN user on user.user_id = game_card.user_id INNER JOIN deck_card ON deck_card.card_id = game_card.card_id WHERE game_card.card_id = " . $cardid . " AND LOWER(username) = LOWER(\"" . $username . "\") AND play_status = 1";
     $result = $conn->query($sql);
     if ($row = $result->fetch_assoc()) {
         $damage = $row["damage"];
         $health = $row["health"];
-
+        $cardname = $row["card_name"];
         $sql = "UPDATE game_card INNER JOIN user on user.user_id = game_card.user_id SET play_status = 2 WHERE card_id = " . $cardid . " AND username = \"" . $username . "\"";
         $conn->query($sql);
     } else {
@@ -90,6 +91,7 @@ if ($validAttack) {
 }
 if ($validAttack) {
     $prevHealth = 0;
+    $tgtUsername = "";
     $sql = "SELECT health FROM game_player INNER JOIN user on user.user_id = game_player.user_id WHERE username = \"" . $username . "\"";
     $result = $conn->query($sql);
     if ($row = $result->fetch_assoc()) {
@@ -101,13 +103,30 @@ if ($validAttack) {
     $conn->query(($sql));
 
     $prevHealth = 0;
-    $sql = "SELECT health FROM game_player WHERE user_id = \"" . $target . "\"";
+    $sql = "SELECT health, username FROM game_player INNER JOIN user ON user.user_id = game_player.user_id WHERE user.user_id = \"" . $target . "\"";
     $result = $conn->query($sql);
     if ($row = $result->fetch_assoc()) {
         $prevHealth = $row["health"];
+        $tgtUsername = $row["username"];
     } else {
         die("Did not find player health");
     }
+    $msg = "";
+    if ($health == 0) {
+        if ($damage > 0) {
+            $msg = $username . " played " . $cardname . ", attacking " . $tgtUsername . " for " . strval($damage) . " hp";
+        } else if ($damage == 0) {
+            $msg = $username . " played " . $cardname;
+        }
+    } else {
+        if ($damage == 0) {
+            $msg = $username . " played " . $cardname . ", healing " . strval($health) . "hp";
+        } else {
+            $msg = $username . " played " . $cardname . ", healing " . strval($health) . " hp, attacking " . $tgtUsername . " for " . strval($damage) . " hp";
+        }
+    }
+    $sql = "INSERT INTO activity_log (log_msg) VALUES (\"" . $msg . "\");";
+    $result = $conn->query($sql);
     $sql = "UPDATE game_player SET health = " . ($prevHealth - $damage) . " WHERE user_id = " . $target;
     $result = $conn->query($sql);
 }
@@ -119,13 +138,13 @@ if ($result->num_rows == 0) {
     $sql = "SELECT * FROM game_card INNER JOIN user ON user.user_id = game_card.user_id WHERE play_status = 1 AND username = \"" . $username . "\"";
     $result = $conn->query($sql);
     if ($result->num_rows <= 3) {
-        $sql = "UPDATE game_card SET play_status = 0 WHERE play_status = 2 AND (SELECT user_id FROM user WHERE username = \"".$username."\") = user_id";
+        $sql = "UPDATE game_card SET play_status = 0 WHERE play_status = 2 AND (SELECT user_id FROM user WHERE username = \"" . $username . "\") = user_id";
         $conn->query($sql);
     }
 }
 //draw new cards
 
-$sql = "UPDATE game_card SET play_status = 1 WHERE play_status = 0 AND (SELECT user_id FROM user WHERE username = \"".$username."\") = user_id ORDER BY RAND () LIMIT 1";
+$sql = "UPDATE game_card SET play_status = 1 WHERE play_status = 0 AND (SELECT user_id FROM user WHERE username = \"" . $username . "\") = user_id ORDER BY RAND () LIMIT 1";
 $conn->query($sql);
 
 

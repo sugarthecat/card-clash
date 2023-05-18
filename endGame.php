@@ -1,5 +1,6 @@
 <?php
 
+
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -10,6 +11,7 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("{\"error\": \"Connection failed: " . $conn->connect_error . "\"}");
 }
+
 $username = $_GET["un"];
 $password = $_GET["pw"];
 $signedIn = true;
@@ -24,10 +26,12 @@ $result = $conn->query($sql);
 if ($result->num_rows == 0) {
     $signedIn = false;
 }
-if(!$signedIn){
-    die("Not signed in");
+if($signedIn){
+    $sql = "UPDATE game_status SET is_active = 0";
+    $conn->query($sql);
+    $sql = "DELETE FROM game_player";
+    $conn->query($sql);
+    $sql = "DELETE FROM activity_log";
+    $conn->query($sql);
 }
-$sql = "UPDATE game_status SET is_active = 1";
-$conn->query($sql);
-
 ?>

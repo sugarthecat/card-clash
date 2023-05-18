@@ -8,6 +8,11 @@ CREATE TABLE game_status(
 );
 INSERT INTO game_status VALUES
 (0); 
+CREATE TABLE activity_log(
+    log_msg VARCHAR (80),
+    inc INT AUTO_INCREMENT,
+    PRIMARY KEY(inc)
+);
 CREATE TABLE `user`(
     user_id int AUTO_INCREMENT UNIQUE,
     username varchar(30) UNIQUE,

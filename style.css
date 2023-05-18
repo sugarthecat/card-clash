@@ -9,6 +9,13 @@ canvas{
     
     user-select: none;
 }
+ul.statlist{
+    list-style-type: none;
+    padding:0;
+}
+ul.statlist li{
+    font-size: 25px;
+}
 button{
     background-color: #32a0a8;
     padding: 15px;

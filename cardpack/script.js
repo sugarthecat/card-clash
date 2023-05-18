@@ -1,10 +1,10 @@
-async function getDeckCards(){
+async function getDeckCards() {
     let sLoc = window.location.search;
-    let response = await fetch("getDeck.php"+sLoc)
-    try{
+    let response = await fetch("getDeck.php" + sLoc)
+    try {
         response = await response.json()
 
-    }catch{
+    } catch {
         return
     }
     console.log(response)
@@ -12,8 +12,8 @@ async function getDeckCards(){
 
         let cards = response.cards;
         console.log(cards)
-        for(let i = 0; i<cards.length; i++){
-            let strip = getNewStrip(cards[i].name, cards[i].icon);
+        for (let i = 0; i < cards.length; i++) {
+            let strip = getNewStrip(cards[i]);
             document.getElementById("content").appendChild(strip);
         }
     } else {
@@ -24,12 +24,25 @@ async function getDeckCards(){
     }
 }
 getDeckCards()
-function getNewStrip(name, src, id){
+function getNewStrip(card) {
     let div = document.createElement("div");
-    div.innerHTML = name;
+    div.innerHTML = card.name;
     div.className = "card-stub"
     let img = document.createElement("img")
-    img.src = "../assets/"+src
+    img.src = "../assets/" + card.icon
     div.appendChild(img)
+    let stats = document.createElement("ul");
+    stats.className = "statlist"
+    let health = createLi("Health: " +card.health);
+    let damage = createLi("Damage: "+card.damage);
+    stats.appendChild(health)
+    stats.appendChild(damage)
+    div.appendChild(stats)
     return div
+}
+
+function createLi(innerHTML){
+    let li = document.createElement("li");
+    li.innerHTML = innerHTML;
+    return li;
 }

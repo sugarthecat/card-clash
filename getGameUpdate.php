@@ -35,10 +35,10 @@ $sql = "SELECT is_active FROM game_status";
 $result = $conn->query(($sql));
 if ($row = $result->fetch_assoc()) {
     if ($row["is_active"] == '1') {
-        $out = $out . "\"status\":true";
+        $out = $out . "\"active\":true";
     } else {
         $gameActive = false;
-        $out = $out . "\"status\":false";
+        $out = $out . "\"active\":false";
     }
 }
 if ($signedIn) {
@@ -82,6 +82,8 @@ if ($signedIn) {
         $out = $out . ",{\"name\":\"" . $row["card_name"] . "\", \"icon\": \"" . $row["card_sprite"] . "\", \"health\": \"" . $row["health"] . "\", \"damage\": \"" . $row["damage"] . "\", \"id\": \"" . $row["id"] . "\"}";
     }
     $out = $out . "]";
+}else{
+    $out = $out. ",\"cards\": [] ";
 }
 $sql = "SELECT username, health, user.user_id as \"id\" FROM user INNER JOIN game_player ON game_player.user_id = user.user_id ORDER BY last_turn asc";
 $result = $conn->query($sql);
@@ -99,6 +101,19 @@ if ($result->num_rows > 0) {
     $sql = "UPDATE game_status SET is_active = 0";
     $conn->query($sql);
 }
+$sql = "SELECT log_msg FROM activity_log ORDER BY inc desc LIMIT 5";
+$result = $conn->query($sql);
+$out = $out . ",\"logs\": [";
+if ($result->num_rows > 0) {
+    if ($row = $result->fetch_assoc()) {
+        $out = $out . "\"" . $row["log_msg"] . "\"";
+    }
+    while ($row = $result->fetch_assoc()) {
+        $out = $out . ",\"" . $row["log_msg"] . "\"";
+    }
+    // output data of each row
+}
+$out = $out . "]";
 $out = $out . "}";
 echo $out;
 ?>
