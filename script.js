@@ -114,6 +114,7 @@ try {
 } catch {
     console.log("login failed")
 }
+let gameActive = false;
 async function updateGame() {
     let response = await fetch("getGameUpdate.php?un=" + username + "&pw=" + password).then(x => x.text())
     try {
@@ -132,7 +133,12 @@ async function updateGame() {
             cards = response.cards;
             //console.log(JSON.stringify(response))
         }
-        //console.log(response)
+        if(response.active === false){
+            gameActive = true;
+        }else if(response.active === true){
+            gameActive = false;
+        }
+        console.log(response)
     }
 }
 async function attemptLogin() {

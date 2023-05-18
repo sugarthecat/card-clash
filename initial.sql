@@ -1,6 +1,13 @@
 DROP DATABASE IF EXISTS cardclash;
 CREATE DATABASE cardclash;
 USE cardclash;
+
+CREATE TABLE game_status(
+    is_active int,
+    PRIMARY KEY (is_active)
+);
+INSERT INTO game_status VALUES
+(0); 
 CREATE TABLE `user`(
     user_id int AUTO_INCREMENT UNIQUE,
     username varchar(30) UNIQUE,
