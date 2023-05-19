@@ -33,11 +33,18 @@ function getNewStrip(card) {
     div.appendChild(img)
     let stats = document.createElement("ul");
     stats.className = "statlist"
+    if(card.health > 0){}
     let health = createLi("Health: " +card.health);
     let damage = createLi("Damage: "+card.damage);
     stats.appendChild(health)
     stats.appendChild(damage)
     div.appendChild(stats)
+    if(card.health == 0){
+        health.innerHTML = "";
+    }
+    if(card.damage == 0){
+        damage.innerHTML = "-";
+    }
     return div
 }
 

@@ -13,6 +13,7 @@ function getCookie(cname) {
     }
     return "";
 }
+let decks;
 let username = getCookie("un");
 let password = getCookie("pw");
 async function attemptGetCards() {
@@ -26,10 +27,13 @@ async function attemptGetCards() {
     }
     if (!response.error) {
 
-        let decks = response.decks;
+        decks = response.decks;
         console.log(decks)
         for(let i = 0; i<decks.length; i++){
             let strip = getNewStrip(decks[i].name, decks[i].icon, decks[i].id);
+            if(decks[i].selected == '1'){
+                strip.classList.add("selected-deck")
+            }
             document.getElementById("content").appendChild(strip);
         }
     } else {
@@ -50,6 +54,20 @@ function getNewStrip(name, src, id){
     let a = document.createElement('a')
     a.href = "../cardpack?id="+id
     a.appendChild(img)
+    let button = document.createElement("button");
+    button.innerHTML = "Select Deck"
+    button.onclick = function(){selectDeck(id)};
     div.appendChild(a)
+    div.appendChild(button)
     return div
 }
+
+function selectDeck(deck){
+    let content = document.getElementById("content")
+    for(let i = 0; i< decks.length; i++){
+        content.children[i+1].classList.remove("selected-deck")
+        if(decks[i].id == deck){
+            content.children[i+1].classList.add("selected-deck")
+        }
+    }
+} 

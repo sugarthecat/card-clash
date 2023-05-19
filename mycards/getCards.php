@@ -18,15 +18,15 @@ if ($username != preg_replace("/[^a-zA-Z0-9]+/", "", $username)) {
 if ($password != preg_replace("/[^a-zA-Z0-9]+/", "", $password)) {
     die("{\"error\": \"password must consist only of letters and numbers\"}");
 }
-$sql = "SELECT deck_name, deck_icon, deck.deck_id FROM deck INNER JOIN deck_ownership ON deck.deck_id = deck_ownership.deck_id INNER JOIN user on deck_ownership.user_id = user.user_id WHERE LOWER(username) = LOWER(\"" . $username . "\") AND password = \"" . $password . "\"";
+$sql = "SELECT deck_name, deck_icon, deck.deck_id, user.selected_deck = deck.deck_id AS selected FROM deck INNER JOIN deck_ownership ON deck.deck_id = deck_ownership.deck_id INNER JOIN user on deck_ownership.user_id = user.user_id WHERE LOWER(username) = LOWER(\"" . $username . "\") AND password = \"" . $password . "\"";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
     $cards = "";
     if ($row = $result->fetch_assoc()) {
-        $cards = "{\"name\":\"" . $row["deck_name"] . "\", \"icon\":\"" . $row["deck_icon"] . "\", \"id\": \"" . $row["deck_id"] . "\"}";
+        $cards = "{\"name\":\"" . $row["deck_name"] . "\", \"icon\":\"" . $row["deck_icon"] . "\", \"id\": \"" . $row["deck_id"] . "\", \"selected\": \"" . $row["selected"] . "\"}";
     }
     while ($row = $result->fetch_assoc()) {
-        $cards = $cards .",{\"name\":\"" . $row["deck_name"] . "\", \"icon\":\"" . $row["deck_icon"] . "\", \"id\": \"" . $row["deck_id"] . "\"}";
+        $cards = $cards .",{\"name\":\"" . $row["deck_name"] . "\", \"icon\":\"" . $row["deck_icon"] . "\", \"id\": \"" . $row["deck_id"] . "\", \"selected\": \"" . $row["selected"] . "\"}";
     }
     die("{\"success\": true, \"decks\": [" . $cards . "]}");
     // output data of each row

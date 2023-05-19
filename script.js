@@ -4,6 +4,7 @@ let assets = {}
 let loadedbool = {};
 let players = [];
 let logs = []
+let prevlogs = "";
 let cards = [];
 let gameActive = false;
 let username = getCookie("un");
@@ -33,7 +34,7 @@ function getCookie(cname) {
 }
 function setup() {
     let canvas = createCanvas(600, 600)
-    canvas.parent("content")
+    canvas.parent("game")
 }
 async function mouseClicked() {
     if (!gameActive && signedIn) {
@@ -52,9 +53,9 @@ async function mouseClicked() {
             }
             for (let i = 0; i < cards.length; i++) {
                 if (mouseInRange((i % 5) * 100 + 60, 500 - floor(i / 5) * 100, 80, 80)) {
-                    if(selectedCard == i){
+                    if (selectedCard == i) {
                         selectedCard = null;
-                    }else{
+                    } else {
                         selectedCard = i
                     }
                 }
@@ -105,15 +106,17 @@ function draw() {
         }
         text(players[i].name + " (" + players[i].health + " hp)", 30, i * 35 + 150)
     }
-    if (!gameActive && signedIn && players.length > 1) {
+    if (!gameActive && signedIn) {
         textSize(50)
         textAlign(CENTER)
         text("Game Inactive", 400, 300)
-        textSize(40)
-        fill(255)
-        rect(325, 350, 150, 70)
-        fill(0)
-        text("Start", 400, 400)
+        if (players.length > 1) {
+            textSize(40)
+            fill(255)
+            rect(325, 350, 150, 70)
+            fill(0)
+            text("Start", 400, 400)
+        }
     }
     if (gameActive && isMyTurn() && players.length == 1) {
         textSize(40)
@@ -124,16 +127,11 @@ function draw() {
         textSize(50)
         text("End Game", 300, 370)
         //fetch("endGame.php")
-    }else if (gameActive) {
+    } else if (gameActive) {
         if (isMyTurn()) {
             rect(460, 300, 80, 80)
             fill(0)
             text("SKIP TURN", 465, 310, 60, 80)
-        }
-        for(let i = 0; i<logs.length; i++){
-            fill(255)
-            textSize(20)
-            text(logs[i],300,100 + i * 75,300,100)
         }
         for (let i = 0; i < cards.length; i++) {
             if (assets[cards[i].icon] === undefined) {
@@ -156,9 +154,15 @@ function draw() {
                 fill(0)
                 textAlign(CENTER)
                 textSize(30)
-                text(cards[i].name, 480, 150)
-                text(cards[i].damage + " Dmg", 480, 180)
-                text(cards[i].health + " Hp", 480, 210)
+                text(cards[i].name, 380, 122, 200, 100)
+                if (cards[i].damage > 0) {
+                    text(cards[i].damage + " Dmg", 480, 180)
+                    if (cards[i].health > 0) {
+                        text(cards[i].health + " Hp", 480, 210)
+                    }
+                } else if (cards[i].health > 0) {
+                    text(cards[i].health + " Hp", 480, 180)
+                }
             }
         }
     }
@@ -186,11 +190,35 @@ async function updateGame() {
         } else if (response.active === true) {
             gameActive = true;
         }
-        if(response.logs){
+        if (response.logs) {
             logs = response.logs;
+            if (JSON.stringify(logs) != prevlogs) {
+                prevlogs = JSON.stringify(logs);
+                resetLogSidebar()
+            }
             //console.log(JSON.stringify(response.logs))
         }
         //console.log(response)
+    }
+}
+function resetLogSidebar() {
+    let logsidebar = document.getElementById("logs")
+    if (logs.length == 0) {
+        removeAllChildNodes(logsidebar)
+    }
+    else {
+        let newLog = generateLog(logs[0])
+        logsidebar.insertBefore(newLog, logsidebar.firstChild)
+    }
+}
+function generateLog(loginfo) {
+    let log = document.createElement("p")
+    log.innerHTML = loginfo;
+    return log
+}
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
     }
 }
 async function attemptLogin() {

@@ -29,5 +29,7 @@ if(!$signedIn){
 }
 $sql = "UPDATE game_status SET is_active = 1";
 $conn->query($sql);
+$sql = "DELETE FROM activity_log";
+$conn->query($sql);
 
 ?>
