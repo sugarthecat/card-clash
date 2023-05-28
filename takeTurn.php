@@ -76,13 +76,15 @@ if ($result->num_rows == 0) {
 $damage = 0;
 $health = 0;
 $cardname = "";
+$sprite = "";
 if ($validAttack) {
-    $sql = "SELECT damage, health, card_name FROM game_card INNER JOIN user on user.user_id = game_card.user_id INNER JOIN deck_card ON deck_card.card_id = game_card.card_id WHERE game_card.card_id = " . $cardid . " AND LOWER(username) = LOWER(\"" . $username . "\") AND play_status = 1";
+    $sql = "SELECT damage, health, card_name, card_sprite FROM game_card INNER JOIN user on user.user_id = game_card.user_id INNER JOIN deck_card ON deck_card.card_id = game_card.card_id WHERE game_card.card_id = " . $cardid . " AND LOWER(username) = LOWER(\"" . $username . "\") AND play_status = 1";
     $result = $conn->query($sql);
     if ($row = $result->fetch_assoc()) {
         $damage = $row["damage"];
         $health = $row["health"];
         $cardname = $row["card_name"];
+        $sprite = $row["card_sprite"];
         $sql = "UPDATE game_card INNER JOIN user on user.user_id = game_card.user_id SET play_status = 2 WHERE card_id = " . $cardid . " AND username = \"" . $username . "\"";
         $conn->query($sql);
     } else {
@@ -125,9 +127,13 @@ if ($validAttack) {
             $msg = $username . " played " . $cardname . ", healing " . strval($health) . " hp, attacking " . $tgtUsername . " for " . strval($damage) . " hp";
         }
     }
+    $sql = "UPDATE game_player SET health = " . ($prevHealth - $damage) . " WHERE user_id = " . $target;
+    $result = $conn->query($sql);
     $sql = "INSERT INTO activity_log (log_msg) VALUES (\"" . $msg . "\");";
     $result = $conn->query($sql);
-    $sql = "UPDATE game_player SET health = " . ($prevHealth - $damage) . " WHERE user_id = " . $target;
+}else{
+    
+    $sql = "INSERT INTO activity_log (log_msg) VALUES (\"" . $username . " skipped their turn\");";
     $result = $conn->query($sql);
 }
 

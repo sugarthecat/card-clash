@@ -29,9 +29,9 @@ async function attemptGetCards() {
 
         decks = response.decks;
         console.log(decks)
-        for(let i = 0; i<decks.length; i++){
+        for (let i = 0; i < decks.length; i++) {
             let strip = getNewStrip(decks[i].name, decks[i].icon, decks[i].id);
-            if(decks[i].selected == '1'){
+            if (decks[i].selected == '1') {
                 strip.classList.add("selected-deck")
             }
             document.getElementById("content").appendChild(strip);
@@ -45,29 +45,30 @@ async function attemptGetCards() {
 }
 attemptGetCards();
 
-function getNewStrip(name, src, id){
+function getNewStrip(name, src, id) {
     let div = document.createElement("div");
     div.innerHTML = name;
     div.className = "deck-stub"
     let img = document.createElement("img")
-    img.src = "../assets/"+src
+    img.src = "../assets/" + src
     let a = document.createElement('a')
-    a.href = "../cardpack?id="+id
+    a.href = "../cardpack?id=" + id
     a.appendChild(img)
     let button = document.createElement("button");
     button.innerHTML = "Select Deck"
-    button.onclick = function(){selectDeck(id)};
+    button.onclick = function () { selectDeck(id) };
     div.appendChild(a)
     div.appendChild(button)
     return div
 }
 
-function selectDeck(deck){
+function selectDeck(deck) {
     let content = document.getElementById("content")
-    for(let i = 0; i< decks.length; i++){
-        content.children[i+1].classList.remove("selected-deck")
-        if(decks[i].id == deck){
-            content.children[i+1].classList.add("selected-deck")
+    for (let i = 0; i < decks.length; i++) {
+        content.children[i + 1].classList.remove("selected-deck")
+        if (decks[i].id == deck) {
+            content.children[i + 1].classList.add("selected-deck")
         }
     }
+    fetch("selectDeck.php?un=" + username + "&pw=" + password + "&deck=" + deck);
 } 

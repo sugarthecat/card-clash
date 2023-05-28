@@ -9,7 +9,8 @@ CREATE TABLE game_status(
 INSERT INTO game_status VALUES
 (0); 
 CREATE TABLE activity_log(
-    log_msg VARCHAR (80),
+    log_msg  TEXT,
+    log_icon VARCHAR(45),
     inc INT AUTO_INCREMENT,
     PRIMARY KEY(inc)
 );
@@ -33,10 +34,10 @@ CREATE TABLE deck(
 );
 INSERT INTO deck (deck_name, deck_icon)
 VALUES
-("Army Deck", "tank.png"),
-("Navy Deck", "frigate.png"),
-("Chess Deck", "knight.png"),
-("USSR Deck", "mass_assault.png");
+("Army Deck", "army/tank.png"),
+("Navy Deck", "navy/frigate.png"),
+("Chess Deck", "chess/knight.png"),
+("USSR Deck", "ussr/mass_assault.png");
 CREATE TABLE deck_card(
     deck_id int,
     card_id int, 
@@ -48,49 +49,49 @@ CREATE TABLE deck_card(
 );
 INSERT INTO deck_card (deck_id, card_id, health, damage, card_sprite, card_name)
 VALUES 
-(1,1,0,2,"recruit.png", "Recruit"),
-(1,2,0,2,"recruit.png", "Recruit"),
-(1,3,0,10,"tank.png", "Tank"),
-(1,4,3,0,"medic.png", "Medic"),
-(1,5,3,0,"medic.png", "Medic"),
-(1,6,4,1,"officer.png", "Officer"),
-(1,7,0,5,"soldier.png", "Soldier"),
-(1,8,0,5,"soldier.png", "Soldier"),
-(1,9,0,5,"soldier.png", "Soldier"),
-(1,10,0,0,"mobilization.png", "Mobilization"),
-(2,11,0,0,"carrier.png", "Aircraft Carrier"),
-(2,12,3,0,"destroyer.png", "Destroyer"),
-(2,13,3,0,"destroyer.png", "Destroyer"),
-(2,14,0,6,"cruiser.png", "Cruiser"),
-(2,15,0,6,"cruiser.png", "Cruiser"),
-(2,16,0,10,"battleship.png", "Battleship"),
-(2,17,0,4,"submarine.png", "Submarine"),
-(2,18,0,4,"submarine.png", "Submarine"),
-(2,19,2,0,"frigate.png", "Frigate"),
-(2,20,2,0,"frigate.png", "Frigate"),
-(3,21,2,1,"pawn.png", "Pawn"),
-(3,22,2,1,"pawn.png", "Pawn"),
-(3,23,2,1,"pawn.png", "Pawn"),
-(3,24,2,1,"pawn.png", "Pawn"),
-(3,25,2,1,"pawn.png", "Pawn"),
-(3,26,0,4,"knight.png", "Knight"),
-(3,27,0,4,"bishop.png", "Bishop"),
-(3,28,0,7,"rook.png", "Rook"),
-(3,29,0,10,"queen.png", "Queen"),
-(3,30,0,0,"king.png", "King"),
-(4,31,1,3,"conscript.png", "Conscript"),
-(4,32,1,3,"conscript.png", "Conscript"),
-(4,33,1,3,"conscript.png", "Conscript"),
-(4,34,1,3,"conscript.png", "Conscript"),
-(4,35,1,3,"conscript.png", "Conscript"),
-(4,36,1,3,"conscript.png", "Conscript"),
-(4,37,1,3,"conscript.png", "Conscript"),
-(4,38,1,3,"conscript.png", "Conscript"),
-(4,39,2,6,"soviet_tank.png", "Tank"),
-(4,40,0,0,"mass_assault.png", "Mass Assault");
+(1,1,0,2,"army/recruit.png", "Recruit"),
+(1,2,0,2,"army/recruit.png", "Recruit"),
+(1,3,0,10,"army/tank.png", "Tank"),
+(1,4,3,0,"army/medic.png", "Medic"),
+(1,5,3,0,"army/medic.png", "Medic"),
+(1,6,4,1,"army/officer.png", "Officer"),
+(1,7,0,5,"army/soldier.png", "Soldier"),
+(1,8,0,5,"army/soldier.png", "Soldier"),
+(1,9,0,5,"army/soldier.png", "Soldier"),
+(1,10,0,0,"army/mobilization.png", "Mobilization"),
+(2,11,0,0,"navy/carrier.png", "Aircraft Carrier"),
+(2,12,3,0,"navy/destroyer.png", "Destroyer"),
+(2,13,3,0,"navy/destroyer.png", "Destroyer"),
+(2,14,0,6,"navy/cruiser.png", "Cruiser"),
+(2,15,0,6,"navy/cruiser.png", "Cruiser"),
+(2,16,0,10,"navy/battleship.png", "Battleship"),
+(2,17,0,4,"navy/submarine.png", "Submarine"),
+(2,18,0,4,"navy/submarine.png", "Submarine"),
+(2,19,2,0,"navy/frigate.png", "Frigate"),
+(2,20,2,0,"navy/frigate.png", "Frigate"),
+(3,21,2,1,"chess/pawn.png", "Pawn"),
+(3,22,2,1,"chess/pawn.png", "Pawn"),
+(3,23,2,1,"chess/pawn.png", "Pawn"),
+(3,24,2,1,"chess/pawn.png", "Pawn"),
+(3,25,2,1,"chess/pawn.png", "Pawn"),
+(3,26,0,4,"chess/knight.png", "Knight"),
+(3,27,0,4,"chess/bishop.png", "Bishop"),
+(3,28,0,7,"chess/rook.png", "Rook"),
+(3,29,0,10,"chess/queen.png", "Queen"),
+(3,30,0,0,"chess/king.png", "King"),
+(4,31,1,3,"ussr/conscript.png", "Conscript"),
+(4,32,1,3,"ussr/conscript.png", "Conscript"),
+(4,33,1,3,"ussr/conscript.png", "Conscript"),
+(4,34,1,3,"ussr/conscript.png", "Conscript"),
+(4,35,1,3,"ussr/conscript.png", "Conscript"),
+(4,36,1,3,"ussr/conscript.png", "Conscript"),
+(4,37,1,3,"ussr/conscript.png", "Conscript"),
+(4,38,1,3,"ussr/conscript.png", "Conscript"),
+(4,39,2,6,"ussr/soviet_tank.png", "Tank"),
+(4,40,0,0,"ussr/mass_assault.png", "Mass Assault");
 
 
-CREATE TRIGGER `giveDefaultCard` AFTER INSERT ON `user` FOR EACH ROW INSERT INTO cardclash.deck_ownership( user_id, deck_id ) VALUES (new.user_id, 1);
+CREATE TRIGGER `giveDefaultCard` AFTER INSERT ON `user` FOR EACH ROW INSERT INTO cardclash.deck_ownership( user_id, deck_id ) VALUES (new.user_id, 1),(new.user_id, 2);
 CREATE TABLE game_player(
     user_id int,
     last_server_contact DATETIME,
