@@ -129,10 +129,10 @@ if ($validAttack) {
     }
     $sql = "UPDATE game_player SET health = " . ($prevHealth - $damage) . " WHERE user_id = " . $target;
     $result = $conn->query($sql);
-    $sql = "INSERT INTO activity_log (log_msg) VALUES (\"" . $msg . "\");";
+    $sql = "INSERT INTO activity_log (log_msg, log_icon) VALUES (\"" . $msg . "\", \"" . $sprite . "\");";
     $result = $conn->query($sql);
-}else{
-    
+} else {
+
     $sql = "INSERT INTO activity_log (log_msg) VALUES (\"" . $username . " skipped their turn\");";
     $result = $conn->query($sql);
 }

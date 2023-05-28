@@ -202,18 +202,28 @@ async function updateGame() {
     }
 }
 function resetLogSidebar() {
-    let logsidebar = document.getElementById("logs")
-    if (logs.length == 0) {
-        removeAllChildNodes(logsidebar)
+    let logsidebar = document.getElementById("logs").children[0]
+    while (logsidebar.children.length > 0) {
+        logsidebar.removeChild(logsidebar.children[0])
     }
-    else {
-        let newLog = generateLog(logs[0])
-        logsidebar.insertBefore(newLog, logsidebar.firstChild)
+    for (let i = 0; i < logs.length; i++) {
+        let newLog = generateLog(logs[i])
+        logsidebar.appendChild(newLog)
     }
 }
 function generateLog(loginfo) {
-    let log = document.createElement("p")
-    log.innerHTML = loginfo;
+    console.log(loginfo)
+    let log = document.createElement("tr")
+    let imgd = document.createElement('td')
+    let img = document.createElement('img')
+    img.src = "assets/"+ loginfo.img
+    imgd.appendChild(img)
+    let spand = document.createElement('td')
+    let span = document.createElement('span')
+    span.innerText = loginfo.msg
+    spand.appendChild(span)
+    log.appendChild(imgd)
+    log.appendChild(spand)
     return log
 }
 function removeAllChildNodes(parent) {
@@ -233,5 +243,5 @@ async function attemptLogin() {
     if (!response.error) {
         signedIn = true;
     }
-    await fetch("leaveGame.php?un=" + username + "&pw=" + password).then(x=>x.text());
+    await fetch("leaveGame.php?un=" + username + "&pw=" + password).then(x => x.text());
 }

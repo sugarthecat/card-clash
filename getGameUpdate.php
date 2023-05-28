@@ -101,15 +101,15 @@ if ($result->num_rows > 0) {
     $sql = "UPDATE game_status SET is_active = 0";
     $conn->query($sql);
 }
-$sql = "SELECT log_msg FROM activity_log ORDER BY inc desc LIMIT 5";
+$sql = "SELECT log_msg, log_icon FROM activity_log ORDER BY inc desc LIMIT 20";
 $result = $conn->query($sql);
 $out = $out . ",\"logs\": [";
 if ($result->num_rows > 0) {
     if ($row = $result->fetch_assoc()) {
-        $out = $out . "\"" . $row["log_msg"] . "\"";
+        $out = $out . "{\"msg\":\"" . $row["log_msg"] . "\",\"img\":\"" . $row["log_icon"] . "\"}";
     }
     while ($row = $result->fetch_assoc()) {
-        $out = $out . ",\"" . $row["log_msg"] . "\"";
+        $out = $out . ",{\"msg\":\"" . $row["log_msg"] . "\",\"img\":\"" . $row["log_icon"] . "\"}";
     }
     // output data of each row
 }

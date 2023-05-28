@@ -24,9 +24,11 @@ div.sidebar{
     width: 300px;
     overflow-y: auto;
     font-weight: bolder;
+    text-align: left;
 }
-div.sidebar > p{
-    margin:none;
+div.sidebar * img{
+    height: 50px;
+    width: 50px;
 }
 button{
     background-color: #32a0a8;
