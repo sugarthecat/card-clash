@@ -34,7 +34,7 @@ async function attemptGetCards() {
             if (decks[i].selected == '1') {
                 strip.classList.add("selected-deck")
             }
-            document.getElementById("content").appendChild(strip);
+            document.getElementById("cardlist").appendChild(strip);
         }
     } else {
         document.getElementById("errortext").innerHTML = response.error
@@ -62,13 +62,16 @@ function getNewStrip(name, src, id) {
     return div
 }
 
-function selectDeck(deck) {
-    let content = document.getElementById("content")
+async function selectDeck(deck) {
+    let content = document.getElementById("cardlist")
     for (let i = 0; i < decks.length; i++) {
-        content.children[i + 1].classList.remove("selected-deck")
+        content.children[i].classList.remove("selected-deck")
         if (decks[i].id == deck) {
-            content.children[i + 1].classList.add("selected-deck")
+            content.children[i].classList.add("selected-deck")
         }
     }
-    fetch("selectDeck.php?un=" + username + "&pw=" + password + "&deck=" + deck);
+    let res = await fetch("selectDeck.php?un=" + username + "&pw=" + password + "&deck=" + deck).then(x => x.text());
+    if (res == "1") {
+        initializeStyle()
+    }
 } 

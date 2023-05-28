@@ -35,9 +35,11 @@ button{
     text-align:center;
     text-decoration:none;
     transition: 200ms;
+    cursor: pointer;
 }
 button:hover{
     background-color: #6ab8c4;
+    cursor: pointer;
 }
 header a {
     text-decoration: none;
@@ -55,11 +57,17 @@ div.errortext{
 div.deck-stub{
     background-color: white;
     margin: 5px 5px;
-    display: inline-block;
+    display: block;
+    margin: auto;
     width: 300px;
     text-align: center;
     outline: 2px solid black;
     font-size: 30px;
+}
+div#cardlist{
+    display: grid;
+    grid-template-columns: auto auto auto;
+    text-align: center;
 }
 div.card-stub{
     background-color: white;
@@ -78,7 +86,7 @@ div.deck-stub img, div.card-stub img{
 div.deck-stub img{
     height: 300px;
 }
-.selected-deck{
+div.selected-deck{
     background-color: #98d9e3;
 }
 div#gamecontent{

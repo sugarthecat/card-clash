@@ -27,7 +27,19 @@ async function initializeStyle() {
     }
     addBanner(deckFolder)
     addStylesheet(deckFolder)
-} 
+    addMusic(deckFolder)
+}
+function addMusic(folder) {
+    let head = document.head
+    let audio = document.createElement("audio")
+    audio.setAttribute("loop", "")
+    let source = document.createElement('source')
+    source.src = "assets/" + folder + "/theme.mp3"
+    source.type = "audio/mpeg"
+    audio.appendChild(source)
+    head.appendChild(audio)
+    document.onclick =function(){audio.play()}
+}
 function addStylesheet(folder) {
     let head = document.head;
     let link = document.createElement("link")

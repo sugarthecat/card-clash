@@ -23,5 +23,6 @@ if ($deck != preg_replace("/[^0-9]+/", "", $deck)) {
     die("{\"error\": \"password must consist only of letters and numbers\"}");
 }
 $sql = "UPDATE user INNER JOIN deck_ownership ON user.user_id = deck_ownership.user_id SET selected_deck = ".$deck." WHERE username = \"".$username."\" AND password = \"".$password."\"";
-$conn->query($sql)
+$conn->query($sql);
+die("1");
 ?>

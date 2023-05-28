@@ -233,4 +233,5 @@ async function attemptLogin() {
     if (!response.error) {
         signedIn = true;
     }
+    await fetch("leaveGame.php?un=" + username + "&pw=" + password).then(x=>x.text());
 }

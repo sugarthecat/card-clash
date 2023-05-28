@@ -1,0 +1,14 @@
+html{
+    background-image: url("chessboard.png");
+}
+body, button:hover{
+    background-color: #e5b96d;
+}
+button:hover{
+    background-color: white;
+    color: black;
+}
+div.sidebar, button{
+    background-color: #5b3900;
+    color: white;
+}
