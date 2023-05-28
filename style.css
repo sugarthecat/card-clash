@@ -21,8 +21,9 @@ div.sidebar{
     margin:auto;
     background-color: #98d9e3;
     height: 600px;
-    width: 200px;
+    width: 300px;
     overflow-y: auto;
+    font-weight: bolder;
 }
 div.sidebar > p{
     margin:none;
@@ -52,6 +53,7 @@ div.errortext{
     font-weight: bolder;
 }
 div.deck-stub{
+    background-color: white;
     margin: 5px 5px;
     display: inline-block;
     width: 300px;
@@ -60,6 +62,7 @@ div.deck-stub{
     font-size: 30px;
 }
 div.card-stub{
+    background-color: white;
     margin: 5px 5px;
     display: inline-block;
     width: 200px;

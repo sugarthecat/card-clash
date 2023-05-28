@@ -26,18 +26,21 @@ CREATE TABLE deck_ownership(
     deck_id int,
     PRIMARY KEY(user_id,deck_id)
 );
+
 CREATE TABLE deck(
     deck_name VARCHAR(30),
     deck_id int AUTO_INCREMENT,
-    deck_icon varchar(45),
+    folder varchar(45),
     PRIMARY KEY(deck_id)
 );
-INSERT INTO deck (deck_name, deck_icon)
+
+INSERT INTO deck (deck_name, folder)
 VALUES
-("Army Deck", "army/tank.png"),
-("Navy Deck", "navy/frigate.png"),
-("Chess Deck", "chess/knight.png"),
-("USSR Deck", "ussr/mass_assault.png");
+("Army Deck", "army"),
+("Navy Deck", "navy"),
+("Chess Deck", "chess"),
+("USSR Deck", "ussr");
+
 CREATE TABLE deck_card(
     deck_id int,
     card_id int, 
@@ -91,7 +94,9 @@ VALUES
 (4,40,0,0,"ussr/mass_assault.png", "Mass Assault");
 
 
-CREATE TRIGGER `giveDefaultCard` AFTER INSERT ON `user` FOR EACH ROW INSERT INTO cardclash.deck_ownership( user_id, deck_id ) VALUES (new.user_id, 1),(new.user_id, 2);
+CREATE TRIGGER `giveDefaultCard` 
+AFTER INSERT ON `user` 
+FOR EACH ROW INSERT INTO cardclash.deck_ownership( user_id, deck_id ) VALUES (new.user_id, 1),(new.user_id, 2);
 CREATE TABLE game_player(
     user_id int,
     last_server_contact DATETIME,

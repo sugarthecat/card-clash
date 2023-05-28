@@ -1,0 +1,16 @@
+html{
+    background-color: black;
+}
+body{
+    background-color: darkolivegreen;
+}
+div.sidebar{
+    background-color: olivedrab;
+}
+button{
+    border-radius: 5px;
+    background-color: gray;
+}
+button:hover{
+    background-color: lightgray;
+}
