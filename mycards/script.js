@@ -34,7 +34,7 @@ async function attemptGetCards() {
             if (decks[i].selected == '1') {
                 strip.classList.add("selected-deck")
             }
-            document.getElementById("cardlist").appendChild(strip);
+            document.getElementById("decklist").appendChild(strip);
         }
     } else {
         document.getElementById("errortext").innerHTML = response.error
@@ -63,7 +63,7 @@ function getNewStrip(name, src, id) {
 }
 
 async function selectDeck(deck) {
-    let content = document.getElementById("cardlist")
+    let content = document.getElementById("decklist")
     for (let i = 0; i < decks.length; i++) {
         content.children[i].classList.remove("selected-deck")
         if (decks[i].id == deck) {

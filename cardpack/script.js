@@ -14,7 +14,7 @@ async function getDeckCards() {
         console.log(cards)
         for (let i = 0; i < cards.length; i++) {
             let strip = getNewStrip(cards[i]);
-            document.getElementById("content").appendChild(strip);
+            document.getElementById("content").children[1].appendChild(strip);
         }
     } else {
         document.getElementById("errortext").innerHTML = response.error

@@ -66,10 +66,18 @@ div.deck-stub{
     outline: 2px solid black;
     font-size: 30px;
 }
-div#cardlist{
+div#cardlist, div#decklist{
+    margin-top: 15px;
     display: grid;
-    grid-template-columns: auto auto auto;
+    row-gap: 20px;
     text-align: center;
+}
+div#decklist{
+    grid-template-columns: 33.33% 33.33% 33.34%;
+}
+div#cardlist{
+    
+    grid-template-columns: 20% 20% 20% 20% 20%;
 }
 div.card-stub{
     background-color: white;

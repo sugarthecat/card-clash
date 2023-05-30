@@ -155,7 +155,10 @@ function draw() {
                 textAlign(CENTER)
                 textSize(30)
                 text(cards[i].name, 380, 122, 200, 100)
-                if (cards[i].damage > 0) {
+                if (cards[i].description) {
+
+                    text(cards[i].description, 380, 180,200,200)
+                } else if (cards[i].damage > 0) {
                     text(cards[i].damage + " Dmg", 480, 180)
                     if (cards[i].health > 0) {
                         text(cards[i].health + " Hp", 480, 210)
@@ -178,6 +181,7 @@ async function updateGame() {
     if (response.error) {
         console.error(response.error)
     } else {
+        console.log(response)
         if (response.players) {
             players = response.players
         }
@@ -216,7 +220,7 @@ function generateLog(loginfo) {
     let log = document.createElement("tr")
     let imgd = document.createElement('td')
     let img = document.createElement('img')
-    img.src = "assets/"+ loginfo.img
+    img.src = "assets/" + loginfo.img
     imgd.appendChild(img)
     let spand = document.createElement('td')
     let span = document.createElement('span')

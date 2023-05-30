@@ -73,13 +73,13 @@ if ($signedIn) {
 }
 if ($signedIn) {
     $out = $out . ",\"cards\": [";
-    $sql = "SELECT card_name, card_sprite, health, damage, game_card.card_id as \"id\" FROM game_card INNER JOIN deck_card ON game_card.card_id = deck_card.card_id INNER JOIN user on user.user_id = game_card.user_id WHERE username = \"" . $username . "\" AND play_status = 1";
+    $sql = "SELECT card_name, card_sprite, health, damage, game_card.card_id as \"id\", `description` FROM game_card INNER JOIN deck_card ON game_card.card_id = deck_card.card_id INNER JOIN user on user.user_id = game_card.user_id LEFT JOIN special_card_description on game_card.card_id = special_card_description.card_id WHERE username = \"" . $username . "\" AND play_status = 1";
     $result = $conn->query($sql);
     if ($row = $result->fetch_assoc()) {
-        $out = $out . "{\"name\":\"" . $row["card_name"] . "\", \"icon\": \"" . $row["card_sprite"] . "\", \"health\": \"" . $row["health"] . "\", \"damage\": \"" . $row["damage"] . "\", \"id\": \"" . $row["id"] . "\"}";
+        $out = $out . "{\"name\":\"" . $row["card_name"] . "\", \"icon\": \"" . $row["card_sprite"] . "\", \"description\": \"" . $row["description"] . "\", \"health\": \"" . $row["health"] . "\", \"damage\": \"" . $row["damage"] . "\", \"id\": \"" . $row["id"] . "\"}";
     }
     while ($row = $result->fetch_assoc()) {
-        $out = $out . ",{\"name\":\"" . $row["card_name"] . "\", \"icon\": \"" . $row["card_sprite"] . "\", \"health\": \"" . $row["health"] . "\", \"damage\": \"" . $row["damage"] . "\", \"id\": \"" . $row["id"] . "\"}";
+        $out = $out . ",{\"name\":\"" . $row["card_name"] . "\", \"icon\": \"" . $row["card_sprite"] . "\", \"description\": \"" . $row["description"] . "\", \"health\": \"" . $row["health"] . "\", \"damage\": \"" . $row["damage"] . "\", \"id\": \"" . $row["id"] . "\"}";
     }
     $out = $out . "]";
 }else{
