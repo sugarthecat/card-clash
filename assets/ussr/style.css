@@ -8,10 +8,14 @@ html{
 body{
     background-color: red;
 }
+@font-face {
+    font-family: Kremlin;
+    src: url(kremlin.ttf);
+  }
 button{
     color: gold;
     background-color: darkred;
-
+    font-family: Kremlin;
 }
 button:hover{
     color: gold;

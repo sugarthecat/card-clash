@@ -7,11 +7,16 @@ body{
 div.sidebar{
     background-color: olivedrab;
 }
+@font-face {
+    font-family: BlackOpsOne;
+    src: url(BlackOpsOne.ttf);
+  }
 button{
     border-radius: 5px;
     background-color: gray;
     font-weight: bolder;
     transition: none;
+    font-family: BlackOpsOne;
 }
 button:hover{
     background-color: lightgray;

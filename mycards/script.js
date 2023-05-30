@@ -72,6 +72,7 @@ async function selectDeck(deck) {
     }
     let res = await fetch("selectDeck.php?un=" + username + "&pw=" + password + "&deck=" + deck).then(x => x.text());
     if (res == "1") {
+        document.head.removeChild(document.head.children[5])
         initializeStyle()
     }
 } 
