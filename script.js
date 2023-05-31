@@ -105,7 +105,7 @@ function draw() {
         if (isMyTurn() && i != 0 && selectedCard !== null) {
             push()
             fill(selectColor)
-            circle(15, i * 35 + 140, 25)
+            circle(15, i * 35 + 60, 25)
             pop()
         }
         fill(mainColor)
