@@ -61,7 +61,7 @@ async function mouseClicked() {
                 }
             }
             for (let i = 0; i < players.length; i++) {
-                if (i != 0 && selectedCard !== null && dist(mouseX, mouseY, 15, i * 35 + 140) < 25) {
+                if (i != 0 && selectedCard !== null && dist(mouseX, mouseY, 15, i * 35 + 60) < 25) {
                     //console.log("Use card " + cards[selectedCard].id + " on " + players[i].id);
                     //console.log("takeTurn.php?un=" + username + "&pw=" + password + "&card=" + cards[selectedCard].id + "&target=" + players[i].id)
                     console.log(await fetch("takeTurn.php?un=" + username + "&pw=" + password + "&card=" + cards[selectedCard].id + "&target=" + players[i].id).then(x => x.text()))
@@ -89,7 +89,6 @@ function draw() {
     textAlign(CENTER)
     textFont('Georgia')
     textSize(50)
-    text("Card Clash!", 300, 75)
     if (!signedIn) {
         text("Not Signed in", 300, 525)
     }
@@ -101,10 +100,10 @@ function draw() {
         if (isMyTurn() && i != 0 && selectedCard !== null) {
             push()
             fill(255, 0, 0)
-            circle(15, i * 35 + 140, 25)
+            circle(15, i * 35 + 60, 25)
             pop()
         }
-        text(players[i].name + " (" + players[i].health + " hp)", 30, i * 35 + 150)
+        text(players[i].name + " (" + players[i].health + " hp)", 30, i * 35 + 70)
     }
     if (!gameActive && signedIn) {
         textSize(50)
@@ -150,21 +149,21 @@ function draw() {
             }
             if ((mouseInRange((i % 5) * 100 + 60, 500 - floor(i / 5) * 100, 80, 80) && selectedCard === null) || selectedCard == i) {
                 fill(255)
-                rect(380, 120, 200, 100)
+                rect(330, 120, 250, 150)
                 fill(0)
                 textAlign(CENTER)
                 textSize(30)
-                text(cards[i].name, 380, 122, 200, 100)
+                text(cards[i].name, 330, 122, 250, 100)
+                textLeading(30)
                 if (cards[i].description) {
-
-                    text(cards[i].description, 380, 180,200,200)
+                    text(cards[i].description, 330, 180,250,200)
                 } else if (cards[i].damage > 0) {
-                    text(cards[i].damage + " Dmg", 480, 180)
+                    text(cards[i].damage + " Dmg", 455, 180)
                     if (cards[i].health > 0) {
-                        text(cards[i].health + " Hp", 480, 210)
+                        text(cards[i].health + " Hp", 455, 210)
                     }
                 } else if (cards[i].health > 0) {
-                    text(cards[i].health + " Hp", 480, 180)
+                    text(cards[i].health + " Hp", 455, 180)
                 }
             }
         }
@@ -181,7 +180,7 @@ async function updateGame() {
     if (response.error) {
         console.error(response.error)
     } else {
-        console.log(response)
+        
         if (response.players) {
             players = response.players
         }
@@ -216,7 +215,7 @@ function resetLogSidebar() {
     }
 }
 function generateLog(loginfo) {
-    console.log(loginfo)
+    //console.log(loginfo)
     let log = document.createElement("tr")
     let imgd = document.createElement('td')
     let img = document.createElement('img')

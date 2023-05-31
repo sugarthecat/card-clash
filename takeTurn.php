@@ -1,5 +1,39 @@
 <?php
+//
+// FUNCTIONS
+//
+//
+function incrementTurn($user_id, $conn){
+    
+$sql = "UPDATE game_player SET last_turn = now() WHERE user_id = \"" . $user_id . "\"";
+$conn->query($sql);
+$sql = "UPDATE game_player SET last_turn_int = 1+(SELECT last_turn_int FROM game_player ORDER BY last_turn_int desc LIMIT 1) WHERE user_id = \"" . $user_id . "\"";
+$conn->query($sql);
+}
+function drawCard($userid, $conn)
+{
+    // reshuffle old cards
+    $sql = "SELECT * FROM game_card WHERE play_status = 0 AND user_id = \"" . $userid . "\"";
+    $result = $conn->query($sql);
+    if ($result->num_rows == 0) {
+        $sql = "SELECT * FROM game_card WHERE play_status = 1 AND user_id = \"" . $userid . "\"";
+        $result = $conn->query($sql);
+        if ($result->num_rows <= 3) {
+            $sql = "UPDATE game_card SET play_status = 0 WHERE play_status = 2 AND user_id = \"" . $userid . "\"";
+            $conn->query($sql);
+        }
+    }
+    //draw new cards
 
+    $sql = "UPDATE game_card SET play_status = 1 WHERE play_status = 0 AND  user_id = \"" . $userid . "\" ORDER BY RAND () LIMIT 1";
+    $conn->query($sql);
+}
+//
+//CODE
+//
+//
+//
+//
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -64,11 +98,15 @@ if (array_key_exists("target", $_GET)) {
 } else {
     $validAttack = false;
 }
-
-$sql = "SELECT * FROM game_player INNER JOIN user on user.user_id = game_player.user_id WHERE username = \"" . $username . "\"";
+$user_id;
+$sql = "SELECT user.user_id FROM game_player INNER JOIN user on user.user_id = game_player.user_id WHERE username = \"" . $username . "\"";
 $result = $conn->query($sql);
 if ($result->num_rows == 0) {
     die("Failed: Not oldest turn");
+} elseif ($row = $result->fetch_assoc()) {
+    $user_id = $row["user_id"];
+} else {
+    die("User ID not found");
 }
 
 //Attack if possible
@@ -137,27 +175,13 @@ if ($validAttack) {
     $result = $conn->query($sql);
 }
 
-// reshuffle old cards
-$sql = "SELECT * FROM game_card INNER JOIN user ON user.user_id = game_card.user_id WHERE play_status = 0 AND username = \"" . $username . "\"";
-$result = $conn->query($sql);
-if ($result->num_rows == 0) {
-    $sql = "SELECT * FROM game_card INNER JOIN user ON user.user_id = game_card.user_id WHERE play_status = 1 AND username = \"" . $username . "\"";
-    $result = $conn->query($sql);
-    if ($result->num_rows <= 3) {
-        $sql = "UPDATE game_card SET play_status = 0 WHERE play_status = 2 AND (SELECT user_id FROM user WHERE username = \"" . $username . "\") = user_id";
-        $conn->query($sql);
-    }
+drawCard($user_id, $conn);
+//Mobilization: Draw 2 cards
+if ($cardid == 10) {
+    drawCard($user_id, $conn);
+    drawCard($user_id, $conn);
 }
-//draw new cards
-
-$sql = "UPDATE game_card SET play_status = 1 WHERE play_status = 0 AND (SELECT user_id FROM user WHERE username = \"" . $username . "\") = user_id ORDER BY RAND () LIMIT 1";
-$conn->query($sql);
-
-
-$sql = "UPDATE game_player INNER JOIN user ON user.user_id = game_player.user_id SET last_turn = now() WHERE username = \"" . $username . "\"";
-$conn->query($sql);
-$sql = "UPDATE game_player INNER JOIN user ON user.user_id = game_player.user_id SET last_turn_int = 1+(SELECT last_turn_int FROM game_player ORDER BY last_turn_int desc LIMIT 1) WHERE username = \"" . $username . "\"";
-$conn->query($sql);
+incrementTurn($user_id,$conn);
 $out = "executed turn";
 echo $out;
 ?>
