@@ -3,12 +3,13 @@
 // FUNCTIONS
 //
 //
-function incrementTurn($user_id, $conn){
-    
-$sql = "UPDATE game_player SET last_turn = now() WHERE user_id = \"" . $user_id . "\"";
-$conn->query($sql);
-$sql = "UPDATE game_player SET last_turn_int = 1+(SELECT last_turn_int FROM game_player ORDER BY last_turn_int desc LIMIT 1) WHERE user_id = \"" . $user_id . "\"";
-$conn->query($sql);
+function incrementTurn($user_id, $conn)
+{
+
+    $sql = "UPDATE game_player SET last_turn = now() WHERE user_id = \"" . $user_id . "\"";
+    $conn->query($sql);
+    $sql = "UPDATE game_player SET last_turn_int = 1+(SELECT last_turn_int FROM game_player ORDER BY last_turn_int desc LIMIT 1) WHERE user_id = \"" . $user_id . "\"";
+    $conn->query($sql);
 }
 function drawCard($userid, $conn)
 {
@@ -27,6 +28,17 @@ function drawCard($userid, $conn)
 
     $sql = "UPDATE game_card SET play_status = 1 WHERE play_status = 0 AND  user_id = \"" . $userid . "\" ORDER BY RAND () LIMIT 1";
     $conn->query($sql);
+}
+function getPreviousLogImage($conn)
+{
+
+    $sql = "SELECT log_icon FROM activity_log ORDER BY inc desc LIMIT 20";
+    $result = $conn->query($sql);
+    if ($row = $result->fetch_assoc()) {
+        return $row["log_icon"];
+    } else {
+        return "Skip.png";
+    }
 }
 //
 //CODE
@@ -129,6 +141,7 @@ if ($validAttack) {
         $validAttack = false;
     }
 }
+$prevLog = getPreviousLogImage($conn);
 if ($validAttack) {
     $prevHealth = 0;
     $tgtUsername = "";
@@ -171,17 +184,21 @@ if ($validAttack) {
     $result = $conn->query($sql);
 } else {
 
-    $sql = "INSERT INTO activity_log (log_msg) VALUES (\"" . $username . " skipped their turn\");";
+    $sql = "INSERT INTO activity_log (log_msg, log_icon) VALUES (\"" . $username . " skipped their turn\", 'skip.png');";
     $result = $conn->query($sql);
 }
 
-drawCard($user_id, $conn);
+//If playing aircraft or aircraft played last turn, draw a card and pass to the next player.
+if (!($cardid == 11 || $prevLog == "navy/carrier.png")) {
+    incrementTurn($user_id, $conn);
+    drawCard($user_id, $conn);
+}
+
 //Mobilization: Draw 2 cards
 if ($cardid == 10) {
     drawCard($user_id, $conn);
     drawCard($user_id, $conn);
 }
-incrementTurn($user_id,$conn);
 $out = "executed turn";
 echo $out;
 ?>
