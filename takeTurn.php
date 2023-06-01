@@ -19,10 +19,25 @@ function drawCard($userid, $conn)
     if ($result->num_rows == 0) {
         $sql = "SELECT * FROM game_card WHERE play_status = 1 AND user_id = \"" . $userid . "\"";
         $result = $conn->query($sql);
-        if ($result->num_rows <= 3) {
+        if ($result->num_rows <= 5) {
             $sql = "UPDATE game_card SET play_status = 0 WHERE play_status = 2 AND user_id = \"" . $userid . "\"";
             $conn->query($sql);
         }
+    }
+    //draw new cards
+
+    $sql = "UPDATE game_card SET play_status = 1 WHERE play_status = 0 AND  user_id = \"" . $userid . "\" ORDER BY RAND () LIMIT 1";
+    $conn->query($sql);
+}
+function drawCardNoExceptions($userid, $conn)
+{
+
+    // reshuffle old cards
+    $sql = "SELECT * FROM game_card WHERE play_status = 0 AND user_id = \"" . $userid . "\"";
+    $result = $conn->query($sql);
+    if ($result->num_rows == 0) {
+        $sql = "UPDATE game_card SET play_status = 0 WHERE play_status = 2 AND user_id = \"" . $userid . "\"";
+        $conn->query($sql);
     }
     //draw new cards
 
@@ -39,6 +54,23 @@ function getPreviousLogImage($conn)
     } else {
         return "Skip.png";
     }
+}
+function chess_ability($conn, $user_id)
+{
+    $pawnCount = get_pawn_count($conn, $user_id);
+    echo $pawnCount;
+    drawCard($user_id, $conn);
+    while ($pawnCount != get_pawn_count($conn, $user_id)) {
+        drawCard($user_id, $conn);
+        $pawnCount = get_pawn_count($conn, $user_id);
+        echo $pawnCount;
+    }
+}
+function get_pawn_count($conn, $user_id)
+{
+    $sql = "SELECT * FROM game_card INNER JOIN deck_card ON game_card.card_id = deck_card.card_id WHERE play_status = 1 AND card_name = \"Pawn\" AND user_id = " . $user_id;
+    $result = $conn->query($sql);
+    return $result->num_rows;
 }
 //
 //CODE
@@ -189,7 +221,12 @@ if ($validAttack) {
 }
 
 //If playing aircraft or aircraft played last turn, draw a card and pass to the next player.
-if (!($cardid == 11 || $prevLog == "navy/carrier.png")) {
+if (($cardid == 11 || $prevLog == "navy/carrier.png")) {
+    //Do nothing. Turn already done. 
+} else if ($cardid == 30) {
+    chess_ability($conn, $user_id);
+    incrementTurn($user_id, $conn);
+} else {
     incrementTurn($user_id, $conn);
     drawCard($user_id, $conn);
 }
@@ -199,6 +236,7 @@ if ($cardid == 10) {
     drawCard($user_id, $conn);
     drawCard($user_id, $conn);
 }
+
 $out = "executed turn";
 echo $out;
 ?>
