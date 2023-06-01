@@ -83,9 +83,14 @@ function draw() {
     if (frameCount % 20 == 0) {
         updateGame();
     }
-    background(80)
+    let backgroundColor = document.getElementById("game").getAttribute("backgroundColor");
+    let mainColor = document.getElementById("game").getAttribute("mainColor");
+    let buttonColor = document.getElementById("game").getAttribute("buttonColor");
+    let cardColor = document.getElementById("game").getAttribute("cardColor");
+    let selectColor = document.getElementById("game").getAttribute("selectColor");
+    background(backgroundColor)
     noStroke()
-    fill(255)
+    fill(mainColor)
     textAlign(CENTER)
     textFont('Georgia')
     textSize(50)
@@ -99,37 +104,42 @@ function draw() {
     for (let i = 0; i < players.length; i++) {
         if (isMyTurn() && i != 0 && selectedCard !== null) {
             push()
-            fill(255, 0, 0)
+            fill(selectColor)
             circle(15, i * 35 + 60, 25)
             pop()
         }
+        fill(mainColor)
         text(players[i].name + " (" + players[i].health + " hp)", 30, i * 35 + 70)
     }
     if (!gameActive && signedIn) {
         textSize(50)
         textAlign(CENTER)
+        fill(mainColor)
         text("Game Inactive", 400, 300)
         if (players.length > 1) {
             textSize(40)
-            fill(255)
+            fill(buttonColor)
             rect(325, 350, 150, 70)
-            fill(0)
+            fill(mainColor)
             text("Start", 400, 400)
         }
     }
     if (gameActive && isMyTurn() && players.length == 1) {
         textSize(40)
         textAlign(CENTER)
+        fill(mainColor)
         text("You win!", 300, 200)
+        fill(buttonColor)
         rect(150, 300, 300, 100)
-        fill(0)
+        fill(mainColor)
         textSize(50)
         text("End Game", 300, 370)
         //fetch("endGame.php")
     } else if (gameActive) {
         if (isMyTurn()) {
+            fill(buttonColor)
             rect(460, 300, 80, 80)
-            fill(0)
+            fill(mainColor)
             text("SKIP TURN", 465, 310, 60, 80)
         }
         for (let i = 0; i < cards.length; i++) {
@@ -143,14 +153,14 @@ function draw() {
                     fill(100, 200, 200)
                     rect((i % 5) * 100 + 50, 490 - floor(i / 5) * 100, 100, 100)
                 }
-                fill(255)
+                fill(cardColor)
                 rect((i % 5) * 100 + 60, 500 - floor(i / 5) * 100, 80, 80)
                 image(assets[cards[i].icon], (i % 5) * 100 + 60, 500 - floor(i / 5) * 100, 80, 80)
             }
             if ((mouseInRange((i % 5) * 100 + 60, 500 - floor(i / 5) * 100, 80, 80) && selectedCard === null) || selectedCard == i) {
-                fill(255)
+                fill(buttonColor)
                 rect(330, 120, 250, 150)
-                fill(0)
+                fill(mainColor)
                 textAlign(CENTER)
                 textSize(30)
                 text(cards[i].name, 330, 122, 250, 100)
@@ -180,7 +190,6 @@ async function updateGame() {
     if (response.error) {
         console.error(response.error)
     } else {
-        
         if (response.players) {
             players = response.players
         }
