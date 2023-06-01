@@ -53,12 +53,10 @@ function addBanner(folder) {
     document.getElementById("banner").src = "assets/" + folder + "/banner.png"
 }
 async function addAttributes(folder) {
-    console.log("test!");
     let toSet = document.getElementById("game");
     let attributesPath = "assets/" + folder + "/attributes.json";
     let attributes = await fetch(attributesPath)
         .then((response) => response.json())
-    console.log(attributes);
     Object.entries(attributes).forEach((entry) => {
         let [key, value] = entry;
         toSet.setAttribute(key, value);
