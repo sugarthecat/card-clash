@@ -1,10 +1,11 @@
 async function getDeckCards() {
     let sLoc = window.location.search;
-    let response = await fetch("getDeck.php" + sLoc)
+    let response = await fetch("getDeck.php" + sLoc).then(x => x.text())
     try {
-        response = await response.json()
+        response = JSON.parse(response)
 
     } catch {
+        console.error(response)
         return
     }
     console.log(response)
@@ -33,18 +34,22 @@ function getNewStrip(card) {
     div.appendChild(img)
     let stats = document.createElement("ul");
     stats.className = "statlist"
-    if(card.health > 0){}
-    let health = createLi("Health: " +card.health);
-    let damage = createLi("Damage: "+card.damage);
-    stats.appendChild(health)
-    stats.appendChild(damage)
+    if(card.description != ""){
+        let desc = createLi(card.description);
+        stats.appendChild(desc)
+    }else{
+        let health = createLi("Health: " +card.health);
+        let damage = createLi("Damage: "+card.damage);
+        stats.appendChild(health)
+        stats.appendChild(damage)
+        if(card.health == 0){
+            health.innerHTML = "";
+        }
+        if(card.damage == 0){
+            damage.innerHTML = "-";
+        }
+    }
     div.appendChild(stats)
-    if(card.health == 0){
-        health.innerHTML = "";
-    }
-    if(card.damage == 0){
-        damage.innerHTML = "-";
-    }
     return div
 }
 

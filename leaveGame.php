@@ -19,6 +19,11 @@ if ($username != preg_replace("/[^a-zA-Z0-9]+/", "", $username)) {
 if ($password != preg_replace("/[^a-zA-Z0-9]+/", "", $password)) {
     die();
 }
+$sql = "SELECT * FROM game_status WHERE is_active = 1";
+$result = $conn->query($sql);
+if($result->num_rows > 0){
+    die();
+}
 $sql = "DELETE game_player FROM game_player INNER JOIN user ON user.user_id = game_player.user_id WHERE username = \"" . $username . "\" AND password =\"" . $password . "\"";
 $conn->query($sql);
 die("3")
