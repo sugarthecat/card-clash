@@ -36,9 +36,21 @@ function setup() {
     let canvas = createCanvas(600, 600)
     canvas.parent("game")
 }
+/**
+ * Attacks a given player with your selected card
+ * @param {*} targetID The player to attack 
+ */
+async function playerTargeted(targetID) {
+    if (isMyTurn() && selectedCard !== null) {
+        //console.log("Use card " + cards[selectedCard].id + " on " + players[i].id);
+        //console.log("takeTurn.php?un=" + username + "&pw=" + password + "&card=" + cards[selectedCard].id + "&target=" + players[i].id)
+        console.log(await fetch("takeTurn.php?un=" + username + "&pw=" + password + "&card=" + cards[selectedCard].id + "&target=" + players[targetID].id).then(x => x.text()))
+    }
+}
+let selectedPlayer;
 async function mouseClicked() {
     if (!gameActive && signedIn) {
-        if (mouseInRange(325, 350, 150, 170)) {
+        if (mouseInRange(200, 350, 200, 100)) {
             fetch("startGame.php?un=" + username + "&pw=" + password).then(x => x.text()).then(x => console.log(x));
         }
     }
@@ -48,6 +60,9 @@ async function mouseClicked() {
                 fetch("endGame.php?un=" + username + "&pw=" + password)
             }
         } else {
+            if (mouseInRange(50, 300, 80, 80)) {
+                playerTargeted(selectedPlayer)
+            }
             if (mouseInRange(460, 300, 80, 80)) {
                 fetch("takeTurn.php?un=" + username + "&pw=" + password).then(x => x.text()).then(x => console.log(x))
             }
@@ -58,13 +73,6 @@ async function mouseClicked() {
                     } else {
                         selectedCard = i
                     }
-                }
-            }
-            for (let i = 0; i < players.length; i++) {
-                if (i != 0 && selectedCard !== null && dist(mouseX, mouseY, 15, i * 35 + 60) < 25) {
-                    //console.log("Use card " + cards[selectedCard].id + " on " + players[i].id);
-                    //console.log("takeTurn.php?un=" + username + "&pw=" + password + "&card=" + cards[selectedCard].id + "&target=" + players[i].id)
-                    console.log(await fetch("takeTurn.php?un=" + username + "&pw=" + password + "&card=" + cards[selectedCard].id + "&target=" + players[i].id).then(x => x.text()))
                 }
             }
         }
@@ -79,6 +87,10 @@ function isMyTurn() {
 function draw() {
     if (!isMyTurn()) {
         selectedCard = null
+        if (selectedPlayer != null) {
+            selectedPlayer = null
+            resetPlayerSidebar()
+        }
     }
     if (frameCount % 20 == 0) {
         updateGame();
@@ -101,27 +113,17 @@ function draw() {
 
     textAlign(LEFT)
     textSize(25)
-    for (let i = 0; i < players.length; i++) {
-        if (isMyTurn() && i != 0 && selectedCard !== null) {
-            push()
-            fill(selectColor)
-            circle(15, i * 35 + 60, 25)
-            pop()
-        }
-        fill(mainColor)
-        text(players[i].name + " (" + players[i].health + " hp)", 30, i * 35 + 70)
-    }
     if (!gameActive && signedIn) {
-        textSize(50)
+        textSize(60)
         textAlign(CENTER)
         fill(mainColor)
-        text("Game Inactive", 400, 300)
+        text("Waiting for players...", 300, 200)
         if (players.length > 1) {
-            textSize(40)
+            textSize(50)
             fill(buttonColor)
-            rect(325, 350, 150, 70)
+            rect(200, 350, 200, 100)
             fill(mainColor)
-            text("Start", 400, 400)
+            text("Start", 300, 420)
         }
     }
     if (gameActive && isMyTurn() && players.length == 1) {
@@ -141,6 +143,13 @@ function draw() {
             rect(460, 300, 80, 80)
             fill(mainColor)
             text("SKIP TURN", 465, 310, 60, 80)
+            if (selectedCard !== null && (cards[selectedCard].damage == 0 || selectedPlayer !== null)) {
+                fill(buttonColor)
+                rect(50, 300, 80, 80)
+                fill(mainColor)
+                textAlign(CENTER)
+                text("PLAY", 50, 320, 80, 80)
+            }
         }
         for (let i = 0; i < cards.length; i++) {
             if (assets[cards[i].icon] === undefined) {
@@ -166,7 +175,7 @@ function draw() {
                 text(cards[i].name, 330, 122, 250, 100)
                 textLeading(30)
                 if (cards[i].description) {
-                    text(cards[i].description, 330, 180,250,200)
+                    text(cards[i].description, 330, 180, 250, 200)
                 } else if (cards[i].damage > 0) {
                     text(cards[i].damage + " Dmg", 455, 180)
                     if (cards[i].health > 0) {
@@ -191,7 +200,10 @@ async function updateGame() {
         console.error(response.error)
     } else {
         if (response.players) {
-            players = response.players
+            if (JSON.stringify(players) != JSON.stringify(response.players)) {
+                players = response.players
+                resetPlayerSidebar()
+            }
         }
         if (response.cards) {
             cards = response.cards;
@@ -222,6 +234,43 @@ function resetLogSidebar() {
         let newLog = generateLog(logs[i])
         logsidebar.appendChild(newLog)
     }
+}
+function resetPlayerSidebar() {
+    let playersidebar = document.getElementById("players").children[0].children[1]
+    while (playersidebar.children.length > 0) {
+        playersidebar.removeChild(playersidebar.children[0])
+    }
+    for (let i = 0; i < players.length; i++) {
+        let newLog = generatePlayer(players[i], i)
+        if (selectedPlayer == i) {
+            newLog.className += " highlighted"
+        }
+        playersidebar.appendChild(newLog)
+    }
+}
+function generatePlayer(player, index) {
+    let playerRow = document.createElement("tr")
+    let imgd = document.createElement('td')
+    let img = document.createElement('img')
+    img.src = "assets/" + player.folder + "/icon.png"
+    imgd.appendChild(img)
+    let spand = document.createElement('td')
+    let span = document.createElement('h2')
+    span.innerText = player.name + " (" + player.health + " hp)"
+    spand.appendChild(span)
+    playerRow.appendChild(imgd)
+    playerRow.appendChild(spand)
+    playerRow.onclick = function () {
+        if (isMyTurn()) {
+            if( index != 0){
+                selectedPlayer = (index);
+            }
+            resetPlayerSidebar();
+        }
+
+    };
+    playerRow.className += " clickable"
+    return playerRow
 }
 function generateLog(loginfo) {
     //console.log(loginfo)

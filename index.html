@@ -6,14 +6,14 @@
     <script src="script.js"></script>
     <script src="initializeStyle.js"></script>
 
-    <link rel="stylesheet" type='text/css' href = "style.css"/>
+    <link rel="stylesheet" type='text/css' href="style.css" />
     <link rel="icon" type="image/x-icon" href="./favicon.ico">
 </head>
 
 <body>
     <header>
-        <img id="banner" src="assets/default.png" width="720px" height="180px"/>
-        <hr/>
+        <img id="banner" src="assets/default.png" width="720px" height="180px" />
+        <hr />
         <a href="login/">
             <button>
                 Login
@@ -31,15 +31,25 @@
         </a>
     </header>
     <div id="gamecontent">
-        
-    <div id="players" class="sidebar">
-        
+
+        <div id="players" class="sidebar">
+
+            <table>
+                <colgroup>
+                    <col span="1" style="width:20%"/>
+                    <col span="1" style="width:80%"/>
+                </colgroup>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+        <div id="game" backgroundColor="#505050" mainColor="#FFFFFF" buttonColor="#D3D3D3" cardColor="#FFFFFF"
+            selectColor="#FF0000">
+
+        </div>
+        <div id="logs" class="sidebar">
+            <table></table>
+        </div>
     </div>
-    <div id="game" backgroundColor="#505050" mainColor="#FFFFFF" buttonColor="#D3D3D3" cardColor="#FFFFFF" selectColor="#FF0000">
-        
-    </div>
-    <div id="logs" class="sidebar">
-        <table></table>
-    </div>
-    </div> 
 </body>

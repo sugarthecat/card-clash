@@ -85,15 +85,15 @@ if ($signedIn) {
 }else{
     $out = $out. ",\"cards\": [] ";
 }
-$sql = "SELECT username, health, user.user_id as \"id\" FROM user INNER JOIN game_player ON game_player.user_id = user.user_id ORDER BY last_turn asc";
+$sql = "SELECT username, health, user.user_id as \"id\", folder FROM user INNER JOIN game_player ON game_player.user_id = user.user_id INNER JOIN deck ON user.selected_deck = deck.deck_id ORDER BY last_turn asc";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
     $out = $out . ",\"players\": [";
     if ($row = $result->fetch_assoc()) {
-        $out = $out . "{\"name\":\"" . $row["username"] . "\", \"health\": \"" . $row["health"] . "\", \"id\": \"" . $row["id"] . "\"}";
+        $out = $out . "{\"name\":\"" . $row["username"] . "\", \"health\": \"" . $row["health"] . "\", \"id\": \"" . $row["id"] . "\", \"folder\": \"" . $row["folder"] . "\"}";
     }
     while ($row = $result->fetch_assoc()) {
-        $out = $out . ",{\"name\":\"" . $row["username"] . "\", \"health\": \"" . $row["health"] . "\", \"id\": \"" . $row["id"] . "\"}";
+        $out = $out . ",{\"name\":\"" . $row["username"] . "\", \"health\": \"" . $row["health"] . "\", \"id\": \"" . $row["id"] . "\", \"folder\": \"" . $row["folder"] . "\"}";
     }
     $out = $out . "]";
     // output data of each row

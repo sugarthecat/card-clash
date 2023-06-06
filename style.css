@@ -52,9 +52,27 @@ body{
     margin:auto;
     background-color:white;
 }
+.clickable{
+    cursor: pointer;
+}
+.highlighted{
+    background-color: white;
+}
 div.errortext{
     color: red;
     font-weight: bolder;
+}
+td h2{
+    overflow-x: hidden;
+}
+td{
+    border: none;
+    padding: 5px;
+}
+div.sidebar table{
+    width: 100%;
+    table-layout: fixed;
+    word-wrap: break-all;
 }
 div.deck-stub{
     background-color: white;
