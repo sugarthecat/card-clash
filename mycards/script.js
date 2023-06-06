@@ -63,15 +63,16 @@ function getNewStrip(name, src, id) {
 }
 
 async function selectDeck(deck) {
-    let content = document.getElementById("decklist")
-    for (let i = 0; i < decks.length; i++) {
-        content.children[i].classList.remove("selected-deck")
-        if (decks[i].id == deck) {
-            content.children[i].classList.add("selected-deck")
-        }
-    }
     let res = await fetch("selectDeck.php?un=" + username + "&pw=" + password + "&deck=" + deck).then(x => x.text());
+    console.log(res)
     if (res == "1") {
+        let content = document.getElementById("decklist")
+        for (let i = 0; i < decks.length; i++) {
+            content.children[i].classList.remove("selected-deck")
+            if (decks[i].id == deck) {
+                content.children[i].classList.add("selected-deck")
+            }
+        }
         document.head.removeChild(document.head.children[5])
         initializeStyle()
     }
