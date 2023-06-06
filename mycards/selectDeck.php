@@ -22,7 +22,16 @@ if ($password != preg_replace("/[^a-zA-Z0-9]+/", "", $password)) {
 if ($deck != preg_replace("/[^0-9]+/", "", $deck)) {
     die("{\"error\": \"password must consist only of letters and numbers\"}");
 }
-$sql = "UPDATE user INNER JOIN deck_ownership ON user.user_id = deck_ownership.user_id SET selected_deck = ".$deck." WHERE username = \"".$username."\" AND password = \"".$password."\"";
+$sql = "SELECT * FROM game_status WHERE is_active = 0";
+$result = $conn->query($sql);
+if ($result->num_rows == 0) {
+    $sql = "SELECT * FROM game_player INNER JOIN user WHERE lower(username) = \"" . $username . "\"  AND password = \"" . $password . "\"";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        die("7");
+    }
+}
+$sql = "UPDATE user INNER JOIN deck_ownership ON user.user_id = deck_ownership.user_id SET selected_deck = " . $deck . " WHERE lower(username) = \"" . $username . "\" AND password = \"" . $password . "\"";
 $conn->query($sql);
 die("1");
 ?>
