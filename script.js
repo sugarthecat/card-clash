@@ -45,6 +45,7 @@ async function playerTargeted(targetID) {
         //console.log("Use card " + cards[selectedCard].id + " on " + players[i].id);
         //console.log("takeTurn.php?un=" + username + "&pw=" + password + "&card=" + cards[selectedCard].id + "&target=" + players[i].id)
         console.log(await fetch("takeTurn.php?un=" + username + "&pw=" + password + "&card=" + cards[selectedCard].id + "&target=" + players[targetID].id).then(x => x.text()))
+        selectedCard = null;
     }
 }
 let selectedPlayer;
@@ -73,6 +74,8 @@ async function mouseClicked() {
                     } else {
                         selectedCard = i
                     }
+                    selectedPlayer = null
+                    resetPlayerSidebar();
                 }
             }
         }
@@ -168,21 +171,21 @@ function draw() {
             }
             if ((mouseInRange((i % 5) * 100 + 60, 500 - floor(i / 5) * 100, 80, 80) && selectedCard === null) || selectedCard == i) {
                 fill(buttonColor)
-                rect(330, 120, 250, 150)
+                rect(330, 50, 250, 200)
                 fill(mainColor)
                 textAlign(CENTER)
                 textSize(30)
-                text(cards[i].name, 330, 122, 250, 100)
+                text(cards[i].name, 330, 72, 250, 100)
                 textLeading(30)
                 if (cards[i].description) {
-                    text(cards[i].description, 330, 180, 250, 200)
+                    text(cards[i].description, 330, 130, 250, 200)
                 } else if (cards[i].damage > 0) {
-                    text(cards[i].damage + " Dmg", 455, 180)
+                    text(cards[i].damage + " Dmg", 455, 130)
                     if (cards[i].health > 0) {
-                        text(cards[i].health + " Hp", 455, 210)
+                        text(cards[i].health + " Hp", 455, 160)
                     }
                 } else if (cards[i].health > 0) {
-                    text(cards[i].health + " Hp", 455, 180)
+                    text(cards[i].health + " Hp", 455, 130)
                 }
             }
         }
@@ -262,7 +265,7 @@ function generatePlayer(player, index) {
     playerRow.appendChild(spand)
     playerRow.onclick = function () {
         if (isMyTurn()) {
-            if( index != 0){
+            if ((cards[selectedCard].damage > 0 && index != 0) || (cards[selectedCard].damage == 0 && index == 0)) {
                 selectedPlayer = (index);
             }
             resetPlayerSidebar();

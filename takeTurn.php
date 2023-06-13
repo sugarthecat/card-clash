@@ -47,7 +47,18 @@ function drawCardNoExceptions($userid, $conn)
 function getPreviousLogImage($conn)
 {
 
-    $sql = "SELECT log_icon FROM activity_log ORDER BY inc desc LIMIT 20";
+    $sql = "SELECT log_icon FROM activity_log ORDER BY inc desc LIMIT 1";
+    $result = $conn->query($sql);
+    if ($row = $result->fetch_assoc()) {
+        return $row["log_icon"];
+    } else {
+        return "Skip.png";
+    }
+}
+function getPreviousAfterLogImage($conn)
+{
+
+    $sql = "SELECT log_icon FROM activity_log ORDER BY inc desc LIMIT 1 OFFSET 1";
     $result = $conn->query($sql);
     if ($row = $result->fetch_assoc()) {
         return $row["log_icon"];
@@ -173,7 +184,11 @@ if ($validAttack) {
         $validAttack = false;
     }
 }
+//USSR deck: Nerf health
 $prevLog = getPreviousLogImage($conn);
+if($prevLog == "ussr/mass_assault.png" || getPreviousAfterLogImage($conn) == "ussr/mass_assault.png"){
+    $health = 0;
+}
 if ($validAttack) {
     $prevHealth = 0;
     $tgtUsername = "";
@@ -226,6 +241,12 @@ if (($cardid == 11 || $prevLog == "navy/carrier.png")) {
 } else if ($cardid == 30) {
     chess_ability($conn, $user_id);
     incrementTurn($user_id, $conn);
+} else if ($cardid == 40) {
+    //USSR: Mass assault
+    drawCard($user_id, $conn);
+    drawCard($user_id, $conn);
+} else if ($prevLog == "ussr/mass_assault.png") {
+    //Do nothing
 } else {
     incrementTurn($user_id, $conn);
     drawCard($user_id, $conn);

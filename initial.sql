@@ -30,7 +30,7 @@ INSERT INTO special_card_description (card_id, `description`) VALUES
 (10, "Draw 2 extra cards"),
 (11, "Take an extra turn"),
 (30, "Draw cards until you don't get a pawn."),
-(40, "Draw an extra card. Play 2 conscripts.");
+(40, "Draw an extra card. Play 2 cards, but they don't heal.");
 CREATE TABLE deck_ownership(
     user_id int,
     deck_id int,
