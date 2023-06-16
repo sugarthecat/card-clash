@@ -265,8 +265,10 @@ function generatePlayer(player, index) {
     playerRow.appendChild(spand)
     playerRow.onclick = function () {
         if (isMyTurn()) {
-            if ((cards[selectedCard].damage > 0 && index != 0) || (cards[selectedCard].damage == 0 && index == 0)) {
+            if ((cards[selectedCard].damage != 0) != (index == 0)) {
                 selectedPlayer = (index);
+            }else if(index != 0){
+                selectedPlayer = 0
             }
             resetPlayerSidebar();
         }

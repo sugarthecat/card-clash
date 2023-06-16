@@ -90,8 +90,8 @@ function get_pawn_count($conn, $user_id)
 //
 //
 $servername = "localhost";
-$username = "root";
-$password = "";
+$username = "cardclash";
+$password = "tjnlastjuniorproj";
 $dbname = "cardclash";
 
 // Create connection
