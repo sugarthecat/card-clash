@@ -2,8 +2,8 @@
 
 
 $servername = "localhost";
-$username = "cardclash";
-$password = "tjnlastjuniorproj";
+$username = "root";
+$password = "Keefe2012";
 $dbname = "cardclash";
 
 // Create connection
