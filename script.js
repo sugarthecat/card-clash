@@ -229,7 +229,7 @@ async function updateGame() {
     }
 }
 function resetLogSidebar() {
-    let logsidebar = document.getElementById("logs").children[0]
+    let logsidebar = document.getElementById("logs").children[0].children[1]
     while (logsidebar.children.length > 0) {
         logsidebar.removeChild(logsidebar.children[0])
     }
