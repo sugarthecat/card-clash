@@ -1,7 +1,6 @@
 DROP DATABASE IF EXISTS cardclash;
 CREATE DATABASE cardclash;
 USE cardclash;
-
 CREATE TABLE game_status(
     is_active int,
     PRIMARY KEY (is_active)
