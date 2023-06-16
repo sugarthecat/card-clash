@@ -91,7 +91,7 @@ function get_pawn_count($conn, $user_id)
 //
 $servername = "localhost";
 $username = "root";
-$password = "Keefe2012";
+$password = "";
 $dbname = "cardclash";
 
 // Create connection
@@ -214,15 +214,15 @@ if ($validAttack) {
     $msg = "";
     if ($health == 0) {
         if ($damage > 0) {
-            $msg = $username . " played " . $cardname . ", attacking " . $tgtUsername . " for " . strval($damage) . " hp";
+            $msg = $username . " played " . $cardname . ", attacking " . $tgtUsername . " for " . strval($damage) . " ❤";
         } else if ($damage == 0) {
             $msg = $username . " played " . $cardname;
         }
     } else {
         if ($damage == 0) {
-            $msg = $username . " played " . $cardname . ", healing " . strval($health) . "hp";
+            $msg = $username . " played " . $cardname . ", healing " . strval($health) . " ❤";
         } else {
-            $msg = $username . " played " . $cardname . ", healing " . strval($health) . " hp, attacking " . $tgtUsername . " for " . strval($damage) . " hp";
+            $msg = $username . " played " . $cardname . ", healing " . strval($health) . " ❤, attacking " . $tgtUsername . " for " . strval($damage) . " ❤";
         }
     }
     $sql = "UPDATE game_player SET health = " . ($prevHealth - $damage) . " WHERE user_id = " . $target;

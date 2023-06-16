@@ -180,12 +180,12 @@ function draw() {
                 if (cards[i].description) {
                     text(cards[i].description, 330, 130, 250, 200)
                 } else if (cards[i].damage > 0) {
-                    text(cards[i].damage + " Dmg", 455, 130)
+                    text(cards[i].damage + " \u2694", 455, 130)
                     if (cards[i].health > 0) {
-                        text(cards[i].health + " Hp", 455, 160)
+                        text(cards[i].health + " \u2665	", 455, 160)
                     }
                 } else if (cards[i].health > 0) {
-                    text(cards[i].health + " Hp", 455, 130)
+                    text(cards[i].health + " \u2665	", 455, 130)
                 }
             }
         }
@@ -259,7 +259,7 @@ function generatePlayer(player, index) {
     imgd.appendChild(img)
     let spand = document.createElement('td')
     let span = document.createElement('h2')
-    span.innerText = player.name + " (" + player.health + " hp)"
+    span.innerText = player.name + " (" + player.health + " \u2665)"
     spand.appendChild(span)
     playerRow.appendChild(imgd)
     playerRow.appendChild(spand)
